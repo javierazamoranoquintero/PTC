@@ -1,3 +1,5 @@
 node_modules/
 .env
 logs/activity.log
+.DS_Store
+.idea/
