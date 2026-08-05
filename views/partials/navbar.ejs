@@ -1,0 +1,43 @@
+<!-- views/partials/navbar.ejs -->
+<nav class="flex justify-between items-center p-6 bg-white shadow-sm">
+    <!-- Logo y nombre del club -->
+    <div class="flex items-center space-x-3">
+        <img src="/images/logo-ptc.svg" alt="Logo PTC" class="w-8 h-8"> //aqui poner el logo del PTC
+
+        <div class="font-bold text-2xl text-teal-600 tracking-tight">
+            <%= nombreClub %>
+        </div>
+        </div>
+    </div>
+
+    <!-- Enlaces de navegación -->
+    <div class="flex items-center space-x-6 font-semibold text-slate-600">
+        <a href="/" class="hover:text-teal-600">Inicio</a>
+        <a href="/canchas" class="hover:text-teal-600">Canchas</a>
+        <a href="/escalerilla" class="hover:text-teal-600">Escalerilla</a>
+        <a href="/noticias" class="hover:text-teal-600">Noticias</a>
+        <a href="/contacto" class="hover:text-teal-600">Contacto</a>
+
+        <!-- Bloque de autenticación: cambia según haya o no sesión activa -->
+        <% if (usuario) { %>
+            <% if (usuario.rol === 'admin') { %>
+                <a href="/admin" class="hover:text-teal-600">Panel admin</a>
+            <% } %>
+
+            <div class="flex items-center space-x-4 pl-6 border-l border-slate-200">
+                <span class="text-slate-500 font-normal">
+                    Hola, <span class="text-teal-700 font-bold"><%= usuario.nombre %></span>
+                </span>
+                <form action="/autenticacion/logout" method="POST" class="inline">
+                    <button type="submit" class="text-red-500 hover:text-red-700 font-semibold transition">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        <% } else { %>
+            <a href="/autenticacion/login" class="pl-6 border-l border-slate-200 hover:text-teal-600">
+                Iniciar sesión
+            </a>
+        <% } %>
+    </div>
+</nav>
