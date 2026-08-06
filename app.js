@@ -98,4 +98,10 @@ app.use((err, req, res, next) => {
     res.render('error');
 });
 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    registrarActividad(`🚀 SERVIDOR: Corriendo en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+});
+
 export default app;
