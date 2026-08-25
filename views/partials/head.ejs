@@ -1,9 +1,51 @@
-<!-- views/partials/head.ejs -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= title %></title>
-<!-- Icono de pestaña (Favicon) -->
-<link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
-<!-- Tailwind & Custom CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="/stylesheets/style.css">
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title><%= title %> | Pichilemu Tennis Club</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script id="tailwind-config">
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#001B3C",
+                    "primary-container": "#001B3C",
+                    secondary: "#D4FF00",
+                    "secondary-container": "#D4FF00",
+                    tertiary: "#F4F1EA",
+                    neutral: "#1A1C1E",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#1A1C1E",
+                },
+                fontFamily: {
+                    heading: ["Montserrat", "sans-serif"],
+                    body: ["Inter", "sans-serif"],
+                },
+                spacing: {
+                    "container-max": "1280px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "40px",
+                    gutter: "24px",
+                },
+            },
+        },
+    }
+</script>
+
+<style>
+    .coastal-shadow {
+        box-shadow: 0 4px 20px rgba(0, 51, 102, 0.08);
+    }
+    .hero-gradient {
+        background: linear-gradient(to bottom, rgba(0, 51, 102, 0.5), rgba(0, 51, 102, 0.15));
+    }
+    /* Espacio reservado para tus propios íconos (SVG/PNG que descargues) */
+    .icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+    }
+</style>

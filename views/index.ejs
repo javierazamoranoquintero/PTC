@@ -4,27 +4,17 @@
     <%- include('partials/head', { title: 'Inicio' }) %>
 </head>
 <body class="flex flex-col min-h-screen">
+
 <%- include('partials/navbar', { nombreClub: 'PTC - Pichilemu Tennis Club' }) %>
 
 <main class="flex-grow">
-    <section class="bg-teal-600 text-white py-20 px-6 text-center">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="text-5xl font-bold mb-6">Bienvenido al PTC</h1>
-            <p class="text-xl opacity-90">
-                Pichilemu Tennis Club — el hogar del tenis y el pádel en Pichilemu.
-            </p>
-        </div>
-    </section>
-
-    <section class="max-w-4xl mx-auto py-16 px-6 text-center">
-        <h2 class="text-3xl font-bold mb-4">Nuestro club</h2>
-        <p class="text-slate-600 text-lg max-w-2xl mx-auto">
-            En <%= nombreClub %>, contamos con 2 canchas de tenis de arcilla
-            y 1 cancha de pádel para nuestros socios.
-        </p>
-    </section>
+    <%- include('partials/hero') %>
+    <%- include('partials/resumen-club') %>
+    <%- include('partials/noticias') %>
+    <%- include('partials/contacto-mapa') %>
 </main>
 
-<%- include('partials/footer', { nombreClub: 'PTC - Pichilemu Tennis Club' }) %>
+<%- include('partials/footer') %>
+
 </body>
 </html>

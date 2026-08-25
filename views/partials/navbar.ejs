@@ -1,43 +1,29 @@
-<!-- views/partials/navbar.ejs -->
-<nav class="flex justify-between items-center p-6 bg-white shadow-sm">
-    <!-- Logo y nombre del club -->
-    <div class="flex items-center space-x-3">
-        <img src="/images/logo-ptc.jpg" alt="Logo PTC" class="w-10 h-10">
+<header class="fixed top-0 z-50 w-full bg-primary/90 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300 h-20">
+    <nav class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-full">
 
-        <div class="font-bold text-2xl text-teal-600 tracking-tight">
-            <%= nombreClub %>
+        <div class="flex items-center gap-3">
+            <!-- Espacio reservado para el logo del club -->
+            <img src="/images/LOGO PTC.png" alt="Logo <%= nombreClub %>" class="icon w-12 h-12">
+            <span class="font-heading text-2xl font-bold text-white"><%= nombreClub %></span>
         </div>
+
+        <div class="hidden md:flex items-center justify-center flex-1 gap-8">
+            <a href="/" class="font-body text-sm text-white font-bold border-b-2 border-secondary pb-1">Inicio</a>
+            <a href="/sobre-el-club" class="font-body text-sm text-white/80 hover:text-white transition-colors">Sobre el Club</a>
+            <a href="/canchas" class="font-body text-sm text-white/80 hover:text-white transition-colors">Canchas</a>
+            <a href="/escalerilla" class="font-body text-sm text-white/80 hover:text-white transition-colors">Escalerilla</a>
+            <a href="/noticias" class="font-body text-sm text-white/80 hover:text-white transition-colors">Noticias</a>
         </div>
-    </div>
 
-    <!-- Enlaces de navegación -->
-    <div class="flex items-center space-x-6 font-semibold text-slate-600">
-        <a href="/" class="hover:text-teal-600">Inicio</a>
-        <a href="/canchas" class="hover:text-teal-600">Canchas</a>
-        <a href="/escalerilla" class="hover:text-teal-600">Escalerilla</a>
-        <a href="/noticias" class="hover:text-teal-600">Noticias</a>
-        <a href="/contacto" class="hover:text-teal-600">Contacto</a>
+        <div class="flex items-center gap-4">
+            <button class="px-6 py-2 border border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all active:scale-95">
+                Ingresar
+            </button>
+            <button class="md:hidden flex items-center p-2 text-white">
+                <!-- Espacio reservado para ícono de menú hamburguesa -->
+                <span class="icon"></span>
+            </button>
+        </div>
 
-        <!-- Bloque de autenticación: cambia según haya o no sesión activa -->
-        <% if (usuario) { %>
-            <% if (usuario.rol === 'admin') { %>
-                <a href="/admin" class="hover:text-teal-600">Panel admin</a>
-            <% } %>
-
-            <div class="flex items-center space-x-4 pl-6 border-l border-slate-200">
-                <span class="text-slate-500 font-normal">
-                    Hola, <span class="text-teal-700 font-bold"><%= usuario.nombre %></span>
-                </span>
-                <form action="/autenticacion/logout" method="POST" class="inline">
-                    <button type="submit" class="text-red-500 hover:text-red-700 font-semibold transition">
-                        Cerrar sesión
-                    </button>
-                </form>
-            </div>
-        <% } else { %>
-            <a href="/autenticacion/login" class="pl-6 border-l border-slate-200 hover:text-teal-600">
-                Iniciar sesión
-            </a>
-        <% } %>
-    </div>
-</nav>
+    </nav>
+</header>
