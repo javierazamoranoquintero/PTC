@@ -5,6 +5,10 @@ import { Reserva } from './reserva.js';
 import { BloqueOcupado } from './bloqueOcupado.js';
 import { Clase } from './clase.js';
 import { InscripcionClase } from './inscripcionClase.js';
+import { CierreCancha } from './cierreCancha.js';
+import { Notificacion } from './notificacion.js';
+import { Noticia } from './noticia.js';
+import { EscalerillaPosicion } from './escalerillaPosicion.js';
 
 // --- Asociaciones entre modelos ---
 // Un usuario puede tener muchas reservas; una reserva pertenece a un usuario.
@@ -46,4 +50,40 @@ InscripcionClase.belongsTo(Usuario, { foreignKey: 'usuarioId' });
 Clase.hasMany(BloqueOcupado, { foreignKey: 'claseId' });
 BloqueOcupado.belongsTo(Clase, { foreignKey: 'claseId' });
 
-export { sequelize, Usuario, Cancha, Reserva, BloqueOcupado, Clase, InscripcionClase };
+// Una cancha puede tener muchos cierres a lo largo del tiempo (lluvia,
+// mantención, etc); cada cierre pertenece a una sola cancha.
+Cancha.hasMany(CierreCancha, { foreignKey: 'canchaId' });
+CierreCancha.belongsTo(Cancha, { foreignKey: 'canchaId' });
+
+// Un cierre de cancha también ocupa bloques de 30 minutos, para que nadie
+// pueda reservar encima de un horario cerrado (mismo patrón que Reserva
+// y Clase; el CHECK de la migración exige que sea exactamente uno de los 3).
+CierreCancha.hasMany(BloqueOcupado, { foreignKey: 'cierreCanchaId' });
+BloqueOcupado.belongsTo(CierreCancha, { foreignKey: 'cierreCanchaId' });
+
+// Un usuario puede tener muchas notificaciones (ej: avisos de cancelación).
+Usuario.hasMany(Notificacion, { foreignKey: 'usuarioId' });
+Notificacion.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+
+// Un usuario (admin) puede ser autor de muchas noticias.
+Usuario.hasMany(Noticia, { foreignKey: 'autorId' });
+Noticia.belongsTo(Usuario, { foreignKey: 'autorId' });
+
+// Cada usuario tiene, como máximo, UNA posición en la escalerilla
+// (relación 1 a 1, por eso hasOne en vez de hasMany).
+Usuario.hasOne(EscalerillaPosicion, { foreignKey: 'usuarioId' });
+EscalerillaPosicion.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+
+export {
+    sequelize,
+    Usuario,
+    Cancha,
+    Reserva,
+    BloqueOcupado,
+    Clase,
+    InscripcionClase,
+    CierreCancha,
+    Notificacion,
+    Noticia,
+    EscalerillaPosicion,
+};
