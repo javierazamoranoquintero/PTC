@@ -33,6 +33,14 @@ Usuario.init(
             allowNull: false,
             defaultValue: true,
         },
+        // Un profesor sigue siendo un socio normal (juega, reserva cancha,
+        // participa en la escalerilla). Esta etiqueta solo le agrega la
+        // vista de "mis clases" en su perfil. No es un rol de permisos.
+        esProfesor: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
     },
     {
         sequelize,
