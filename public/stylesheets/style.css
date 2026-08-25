@@ -1,0 +1,30 @@
+/*
+  public/stylesheets/style.css
+  ------------------------------------------------------------------
+  ¿Para qué sirve este archivo?
+  views/partials/head.ejs ya hacía referencia a este archivo
+  (<link rel="stylesheet" href="/stylesheets/style.css">), pero el
+  archivo no existía en el repo -> era un link roto (un 404 silencioso).
+
+  La mayoría del diseño del sitio se resuelve con clases de utilidad
+  de Tailwind directo en los archivos .ejs (ej: "bg-teal-600 text-white").
+  Este archivo es solo para lo que Tailwind NO cubre bien por sí solo:
+  variables de marca reutilizables, ajustes finos, animaciones propias, etc.
+  ------------------------------------------------------------------
+*/
+
+:root {
+    /* Paleta "club de playa" del PTC. Ajusta estos tonos cuando definan
+       la identidad visual definitiva del club. */
+    --ptc-teal: #0d9488;
+    --ptc-teal-dark: #0f766e;
+    --ptc-sand: #fef3c7;
+}
+
+/* Ejemplo de uso futuro (comentado a propósito, bórralo cuando tengas
+   tu primer estilo real que agregar aquí):
+
+.ptc-hero {
+    background-color: var(--ptc-teal);
+}
+*/
