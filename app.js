@@ -63,6 +63,13 @@ app.use((req, res, next) => {
     res.locals.usuario = req.session.usuario || null;
     next();
 });
+
+// Middleware inyector del nombre del club a todas las vistas, para no
+// tener que repetirlo en cada res.render() de cada controlador.
+app.use((req, res, next) => {
+    res.locals.nombreClub = 'PTC - Pichilemu Tennis Club';
+    next();
+});
 // --- FIN: Configuración de sesión ---
 
 // --- INICIO: Verificación Sequelize ---

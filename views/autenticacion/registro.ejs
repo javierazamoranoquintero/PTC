@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: title }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary">
+
+<%- include('../partials/navbar') %>
+
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-32">
+    <div class="w-full max-w-md bg-white rounded-xl coastal-shadow p-8 md:p-10">
+
+        <h1 class="font-heading text-2xl font-bold text-primary mb-2">Crear cuenta</h1>
+        <p class="font-body text-sm text-neutral/70 mb-6">Únete al club para reservar canchas e inscribirte en clases.</p>
+
+        <% if (error) { %>
+            <div class="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+                <p class="font-body text-sm text-red-700"><%= error %></p>
+            </div>
+        <% } %>
+
+        <form action="/autenticacion/registro" method="POST" class="space-y-5">
+            <div>
+                <label for="nombre" class="block font-body text-sm font-medium text-neutral mb-1">Nombre completo</label>
+                <input
+                        type="text"
+                        id="nombre"
+                        name="nombre"
+                        value="<%= valores.nombre %>"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <div>
+                <label for="email" class="block font-body text-sm font-medium text-neutral mb-1">Correo electrónico</label>
+                <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="<%= valores.email %>"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <div>
+                <label for="password" class="block font-body text-sm font-medium text-neutral mb-1">Contraseña</label>
+                <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        minlength="8"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                <p class="font-body text-xs text-neutral/50 mt-1">Mínimo 8 caracteres.</p>
+            </div>
+
+            <div>
+                <label for="confirmarPassword" class="block font-body text-sm font-medium text-neutral mb-1">Confirmar contraseña</label>
+                <input
+                        type="password"
+                        id="confirmarPassword"
+                        name="confirmarPassword"
+                        minlength="8"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <button
+                    type="submit"
+                    class="w-full bg-primary text-white font-heading font-bold py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-95"
+            >
+                Crear cuenta
+            </button>
+        </form>
+
+        <p class="font-body text-sm text-neutral/70 mt-6 text-center">
+            ¿Ya tienes cuenta?
+            <a href="/autenticacion/login" class="text-primary font-semibold hover:underline">Inicia sesión</a>
+        </p>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>
