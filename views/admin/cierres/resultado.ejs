@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../../partials/head', { title: title }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary">
+
+<%- include('../../partials/navbar') %>
+
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-32">
+    <div class="w-full max-w-lg bg-white rounded-xl coastal-shadow p-8 md:p-10 text-center">
+
+        <h1 class="font-heading text-2xl font-bold text-primary mb-2">Cierre registrado</h1>
+        <p class="font-body text-sm text-neutral/70 mb-8">
+            Se cerraron <%= cantidadCanchas %> cancha<%= cantidadCanchas === 1 ? '' : 's' %> correctamente.
+        </p>
+
+        <div class="grid grid-cols-1 gap-4 text-left mb-8">
+            <div class="bg-tertiary rounded-lg px-4 py-3 flex justify-between items-center">
+                <span class="font-body text-sm text-neutral/70">Reservas canceladas</span>
+                <span class="font-heading font-bold text-primary text-lg"><%= totales.reservasCanceladas %></span>
+            </div>
+            <div class="bg-tertiary rounded-lg px-4 py-3 flex justify-between items-center">
+                <span class="font-body text-sm text-neutral/70">Clases canceladas</span>
+                <span class="font-heading font-bold text-primary text-lg"><%= totales.clasesCanceladas %></span>
+            </div>
+            <div class="bg-tertiary rounded-lg px-4 py-3 flex justify-between items-center">
+                <span class="font-body text-sm text-neutral/70">Notificaciones enviadas</span>
+                <span class="font-heading font-bold text-primary text-lg"><%= totales.notificacionesCreadas %></span>
+            </div>
+        </div>
+
+        <a
+                href="/admin/cierres/nuevo"
+                class="inline-block bg-primary text-white font-heading font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-all active:scale-95"
+        >
+            Cerrar otra cancha
+        </a>
+    </div>
+</main>
+
+<%- include('../../partials/footer') %>
+
+</body>
+</html>

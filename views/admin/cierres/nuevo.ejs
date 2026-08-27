@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../../partials/head', { title: title }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary">
+
+<%- include('../../partials/navbar') %>
+
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-32">
+    <div class="w-full max-w-lg bg-white rounded-xl coastal-shadow p-8 md:p-10">
+
+        <h1 class="font-heading text-2xl font-bold text-primary mb-2">Cerrar cancha</h1>
+        <p class="font-body text-sm text-neutral/70 mb-6">
+            Las reservas y clases que se crucen con este horario se cancelarán automáticamente
+            y se notificará a las personas afectadas.
+        </p>
+
+        <% if (error) { %>
+            <div class="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+                <p class="font-body text-sm text-red-700"><%= error %></p>
+            </div>
+        <% } %>
+
+        <form action="/admin/cierres" method="POST" class="space-y-5">
+            <div>
+                <label for="canchaId" class="block font-body text-sm font-medium text-neutral mb-1">Cancha</label>
+                <select
+                        id="canchaId"
+                        name="canchaId"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                    <option value="" disabled <%= !valores.canchaId ? 'selected' : '' %>>Selecciona una opción</option>
+                    <option value="todas" <%= valores.canchaId === 'todas' ? 'selected' : '' %>>Todas las canchas</option>
+                    <% canchas.forEach((cancha) => { %>
+                        <option value="<%= cancha.id %>" <%= String(valores.canchaId) === String(cancha.id) ? 'selected' : '' %>>
+                            <%= cancha.nombre %> (<%= cancha.tipo %>)
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div>
+                <label for="fechaHoraInicio" class="block font-body text-sm font-medium text-neutral mb-1">Desde</label>
+                <input
+                        type="datetime-local"
+                        id="fechaHoraInicio"
+                        name="fechaHoraInicio"
+                        value="<%= valores.fechaHoraInicio %>"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <div>
+                <label for="fechaHoraFin" class="block font-body text-sm font-medium text-neutral mb-1">Hasta</label>
+                <input
+                        type="datetime-local"
+                        id="fechaHoraFin"
+                        name="fechaHoraFin"
+                        value="<%= valores.fechaHoraFin %>"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <div>
+                <label for="motivo" class="block font-body text-sm font-medium text-neutral mb-1">Motivo</label>
+                <input
+                        type="text"
+                        id="motivo"
+                        name="motivo"
+                        value="<%= valores.motivo %>"
+                        placeholder="Ej: mantención de la superficie"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <button
+                    type="submit"
+                    class="w-full bg-primary text-white font-heading font-bold py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-95"
+            >
+                Cerrar cancha
+            </button>
+        </form>
+    </div>
+</main>
+
+<%- include('../../partials/footer') %>
+
+</body>
+</html>
