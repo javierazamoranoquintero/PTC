@@ -19,6 +19,14 @@ Noticia.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        // Etiqueta corta para agrupar/mostrar la noticia (ej. "Mantenimiento",
+        // "Avisos", "Tips de Juego"). La categoría especial 'Torneo' se usa
+        // para identificar la noticia que se muestra como "Torneo Destacado"
+        // en la página pública de Noticias.
+        categoria: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     },
     {
         sequelize,

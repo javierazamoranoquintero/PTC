@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../../partials/head', { title: title }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary">
+
+<%- include('../../partials/navbar') %>
+
+<main class="flex-grow px-margin-mobile md:px-margin-desktop py-32 max-w-container-max mx-auto w-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-start">
+
+        <div class="bg-white rounded-xl coastal-shadow p-8 md:p-10">
+            <h1 class="font-heading text-2xl font-bold text-primary mb-2">Nuevo torneo</h1>
+            <p class="font-body text-sm text-neutral/70 mb-6">
+                Aparece automáticamente en "Próximas Fechas" de la página de Noticias mientras
+                su fecha no haya pasado.
+            </p>
+
+            <% if (error) { %>
+                <div class="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+                    <p class="font-body text-sm text-red-700"><%= error %></p>
+                </div>
+            <% } %>
+
+            <form action="/admin/torneos" method="POST" class="space-y-5">
+                <div>
+                    <label for="nombre" class="block font-body text-sm font-medium text-neutral mb-1">Nombre del torneo</label>
+                    <input
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            value="<%= valores.nombre %>"
+                            placeholder="Ej: Torneo de Dobles Primavera"
+                            required
+                            class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                </div>
+
+                <div>
+                    <label for="fecha" class="block font-body text-sm font-medium text-neutral mb-1">Fecha</label>
+                    <input
+                            type="date"
+                            id="fecha"
+                            name="fecha"
+                            value="<%= valores.fecha %>"
+                            required
+                            class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                </div>
+
+                <div>
+                    <label for="detalle" class="block font-body text-sm font-medium text-neutral mb-1">Detalle (opcional)</label>
+                    <input
+                            type="text"
+                            id="detalle"
+                            name="detalle"
+                            value="<%= valores.detalle %>"
+                            placeholder="Ej: Inscripciones abiertas"
+                            class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                </div>
+
+                <button
+                        type="submit"
+                        class="w-full bg-primary text-white font-heading font-bold py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-95"
+                >
+                    Crear torneo
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl coastal-shadow p-8 md:p-10">
+            <h2 class="font-heading text-lg font-bold text-primary mb-4">Torneos cargados</h2>
+
+            <% if (torneos.length === 0) { %>
+                <p class="font-body text-sm text-neutral/60">Todavía no hay torneos cargados.</p>
+            <% } else { %>
+                <ul class="divide-y divide-primary/10">
+                    <% torneos.forEach((torneo) => { %>
+                        <li class="py-3 flex items-start justify-between gap-4">
+                            <div>
+                                <p class="font-body font-semibold text-primary"><%= torneo.nombre %></p>
+                                <% if (torneo.detalle) { %>
+                                    <p class="font-body text-xs text-neutral/60"><%= torneo.detalle %></p>
+                                <% } %>
+                            </div>
+                            <span class="font-body text-xs font-bold text-neutral/70 whitespace-nowrap">
+                                <%= new Date(torneo.fecha + 'T00:00:00').toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+                            </span>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } %>
+        </div>
+
+    </div>
+</main>
+
+<%- include('../../partials/footer') %>
+
+</body>
+</html>

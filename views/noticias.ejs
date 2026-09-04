@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('partials/head', { title: 'Noticias' }) %>
+</head>
+<body class="flex flex-col min-h-screen">
+
+<%- include('partials/navbar', { nombreClub: nombreClub, paginaActual: 'noticias' }) %>
+
+<main class="flex-grow pt-20">
+
+    <!-- Hero -->
+    <section class="bg-tertiary py-16 md:py-24 px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-container-max mx-auto text-center">
+            <h1 class="font-heading text-4xl md:text-5xl font-bold text-primary mb-6">Noticias del Club</h1>
+            <p class="font-body text-lg text-neutral/70 max-w-2xl mx-auto">
+                Mantente al día con los últimos torneos, eventos, videos y novedades de nuestro club costero.
+            </p>
+        </div>
+    </section>
+
+    <!-- Torneos y Resultados -->
+    <section class="py-16 px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-container-max mx-auto">
+            <h2 class="font-heading text-2xl font-bold text-primary mb-8 border-l-4 border-secondary pl-4">Torneos y Resultados</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+                <!-- Torneo destacado: la noticia más reciente con categoria = 'Torneo' -->
+                <div class="md:col-span-2">
+                    <% if (torneoDestacado) { %>
+                        <div class="bg-white rounded-xl coastal-shadow p-6 relative overflow-hidden flex flex-col justify-end min-h-[300px] border border-tertiary">
+                            <div class="absolute inset-0 z-0">
+                                <img class="w-full h-full object-cover opacity-90" src="<%= torneoDestacado.imagenUrl || '/images/noticia-placeholder.jpg' %>" alt="<%= torneoDestacado.titulo %>">
+                                <div class="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent"></div>
+                            </div>
+                            <div class="relative z-10 text-white">
+                                <span class="inline-block bg-secondary text-neutral text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wider"><%= torneoDestacado.categoria %></span>
+                                <h3 class="font-heading text-2xl font-bold mb-2"><%= torneoDestacado.titulo %></h3>
+                                <p class="font-body text-sm text-white/90 line-clamp-3"><%= torneoDestacado.contenido %></p>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <div class="bg-white rounded-xl coastal-shadow p-6 flex items-center justify-center min-h-[300px] border border-tertiary text-center">
+                            <p class="font-body text-neutral/60">Todavía no se ha publicado el resultado de ningún torneo.</p>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Próximas fechas: torneos cargados por el admin, con fecha >= hoy -->
+                <div class="bg-white rounded-xl coastal-shadow p-6 flex flex-col border border-tertiary">
+                    <h3 class="font-heading text-xl font-bold text-primary mb-6">Próximas Fechas</h3>
+                    <% if (proximosTorneos.length === 0) { %>
+                        <p class="font-body text-sm text-neutral/60 flex-grow">No hay torneos programados por el momento. Vuelve a revisar más adelante.</p>
+                    <% } else { %>
+                        <ul class="space-y-6 flex-grow">
+                            <% proximosTorneos.forEach((torneo, i) => { %>
+                                <li class="flex items-start gap-4 <%= i < proximosTorneos.length - 1 ? 'pb-6 border-b border-tertiary' : '' %>">
+                                    <div class="bg-primary text-white p-2 rounded-lg text-center min-w-[60px]">
+                                        <span class="block font-body text-xs font-semibold"><%= torneo.mesCorto %></span>
+                                        <span class="block font-heading text-xl font-bold"><%= torneo.dia %></span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-body font-semibold text-neutral mb-1"><%= torneo.nombre %></h4>
+                                        <% if (torneo.detalle) { %>
+                                            <p class="font-body text-sm text-neutral/60"><%= torneo.detalle %></p>
+                                        <% } %>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } %>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería de Videos (contenido de ejemplo por ahora, ver comentario en el controlador) -->
+    <section class="py-16 px-margin-mobile md:px-margin-desktop bg-tertiary">
+        <div class="max-w-container-max mx-auto">
+            <div class="flex items-center gap-3 mb-8">
+                <svg class="w-7 h-7 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+                    <path d="M10 8.5L15.5 12L10 15.5V8.5Z" fill="currentColor"></path>
+                </svg>
+                <h2 class="font-heading text-2xl font-bold text-primary">Galería de Videos</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                <% videos.forEach((video) => { %>
+                    <div class="bg-white rounded-xl p-4 coastal-shadow border border-tertiary">
+                        <div class="relative bg-neutral/10 rounded-lg overflow-hidden aspect-video mb-4">
+                            <img class="w-full h-full object-cover" src="<%= video.imagen %>" alt="<%= video.titulo %>">
+                            <div class="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                                <div class="bg-secondary text-primary w-12 h-12 rounded-full flex items-center justify-center shadow-lg">
+                                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M9 7L17 12L9 17V7Z" fill="currentColor"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="font-body font-semibold text-neutral mb-1"><%= video.titulo %></h4>
+                        <p class="font-body text-sm text-neutral/60"><%= video.detalle %></p>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Artículos y Novedades: todas las noticias reales, excepto la que se muestra como Torneo Destacado -->
+    <section class="py-16 px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-container-max mx-auto">
+            <h2 class="font-heading text-2xl font-bold text-primary mb-8 border-l-4 border-secondary pl-4">Artículos y Novedades</h2>
+
+            <% if (articulos.length === 0) { %>
+                <div class="bg-tertiary rounded-xl p-12 text-center">
+                    <p class="font-body text-neutral/60">Todavía no hay artículos publicados.</p>
+                </div>
+            <% } else { %>
+                <div class="flex flex-col gap-gutter">
+                    <% articulos.forEach((articulo) => { %>
+                        <article class="bg-white rounded-xl coastal-shadow overflow-hidden flex flex-col md:flex-row border border-tertiary">
+                            <div class="md:w-1/3 aspect-video md:aspect-square">
+                                <img class="w-full h-full object-cover" src="<%= articulo.imagenUrl || '/images/noticia-placeholder.jpg' %>" alt="<%= articulo.titulo %>">
+                            </div>
+                            <div class="p-8 md:w-2/3 flex flex-col justify-center">
+                                <% if (articulo.categoria) { %>
+                                    <span class="text-primary/70 text-xs font-bold mb-3 uppercase tracking-wider"><%= articulo.categoria %></span>
+                                <% } %>
+                                <h3 class="font-heading text-2xl font-bold text-neutral mb-3"><%= articulo.titulo %></h3>
+                                <p class="font-body text-neutral/70 mb-6 leading-relaxed line-clamp-3"><%= articulo.contenido %></p>
+                                <!-- "Leer más" queda pendiente: todavía no existe la página de detalle de una noticia individual. -->
+                                <span class="text-neutral/40 font-bold flex items-center gap-1 w-fit cursor-not-allowed" title="Próximamente">
+                                    Leer más
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                        </article>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 import express from 'express';
 import { requiereLogin, requiereAdmin } from '../middlewares/auth.js';
 import { mostrarFormularioCierre, crearCierre } from '../controllers/cierreCanchaController.js';
+import { mostrarFormularioTorneo, crearTorneo } from '../controllers/torneoController.js';
 
 const router = express.Router();
 
@@ -16,5 +17,8 @@ router.get('/', (req, res) => {
 
 router.get('/cierres/nuevo', mostrarFormularioCierre);
 router.post('/cierres', crearCierre);
+
+router.get('/torneos/nuevo', mostrarFormularioTorneo);
+router.post('/torneos', crearTorneo);
 
 export default router;

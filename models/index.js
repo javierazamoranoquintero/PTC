@@ -9,6 +9,7 @@ import { CierreCancha } from './cierreCancha.js';
 import { Notificacion } from './notificacion.js';
 import { Noticia } from './noticia.js';
 import { EscalerillaPosicion } from './escalerillaPosicion.js';
+import { Torneo } from './torneo.js';
 
 // --- Asociaciones entre modelos ---
 // Un usuario puede tener muchas reservas; una reserva pertenece a un usuario.
@@ -74,6 +75,10 @@ Noticia.belongsTo(Usuario, { foreignKey: 'autorId' });
 Usuario.hasOne(EscalerillaPosicion, { foreignKey: 'usuarioId' });
 EscalerillaPosicion.belongsTo(Usuario, { foreignKey: 'usuarioId' });
 
+// Un usuario (admin) puede haber creado muchos torneos.
+Usuario.hasMany(Torneo, { foreignKey: 'creadoPorId' });
+Torneo.belongsTo(Usuario, { foreignKey: 'creadoPorId' });
+
 export {
     sequelize,
     Usuario,
@@ -86,4 +91,5 @@ export {
     Notificacion,
     Noticia,
     EscalerillaPosicion,
+    Torneo,
 };

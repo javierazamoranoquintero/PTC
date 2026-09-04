@@ -1,8 +1,8 @@
 import express from 'express';
+import { mostrarNoticias } from '../controllers/noticiaController.js';
+
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send('Módulo en construcción');
-});
+router.get('/', mostrarNoticias);
 
 export default router;
