@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('partials/head', { title: 'Sobre el Club' }) %>
+</head>
+<body class="flex flex-col min-h-screen">
+
+<%- include('partials/navbar', { nombreClub: nombreClub, paginaActual: 'sobre-el-club' }) %>
+
+<main class="flex-grow">
+
+    <!-- Hero: mismo patrón que partials/hero.ejs (imagen de fondo + degradado + pt-20
+         para que el contenido no quede tapado por el navbar, que es "fixed"). -->
+    <section class="relative w-full flex items-center justify-center overflow-hidden pt-20" style="height: 45vh;">
+        <div class="absolute inset-0 z-0">
+            <!-- Espacio reservado para imagen: cancha de arcilla junto al mar -->
+            <div class="w-full h-full bg-cover bg-center" style="background-image: url('/images/sobre-club-hero.jpg');"></div>
+            <div class="absolute inset-0 hero-gradient"></div>
+        </div>
+        <div class="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-3xl">
+            <h1 class="font-heading text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-md">
+                Sobre el Club
+            </h1>
+            <p class="font-body text-lg text-white/90 drop-shadow max-w-2xl mx-auto">
+                Excelencia deportiva frente al mar. Donde la pasión por el tenis se encuentra con la inmensidad del Océano Pacífico.
+            </p>
+        </div>
+    </section>
+
+    <!-- Historia y Misión: mismo patrón de dos columnas que partials/resumen-club.ejs -->
+    <section class="py-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto bg-white">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            <div class="relative rounded-2xl overflow-hidden coastal-shadow aspect-[4/5]">
+                <!-- Espacio reservado para imagen: raqueta apoyada en la red, tono cálido -->
+                <img class="w-full h-full object-cover" src="/images/sobre-club-historia.jpg" alt="Historia del <%= nombreClub %>">
+            </div>
+
+            <div>
+                <span class="inline-block bg-primary/10 text-primary font-body text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-4">
+                    Nuestra Historia
+                </span>
+                <h2 class="font-heading text-2xl font-bold text-primary mb-6">
+                    Forjando campeones en la costa de O'Higgins
+                </h2>
+                <div class="h-1 w-24 bg-secondary mb-6 rounded-full"></div>
+
+                <p class="font-body text-neutral/80 mb-6 leading-relaxed">
+                    Texto placeholder: fundado con la visión de crear un santuario deportivo de primer nivel, Pichilemu Tenis Club nació de la fusión entre la rigurosidad del deporte blanco y la energía renovadora del mar.
+                </p>
+                <p class="font-body text-neutral/80 leading-relaxed">
+                    Texto placeholder: nuestra misión es clara: elevar el estándar del tenis en la región, ofreciendo instalaciones de calidad internacional y una comunidad vibrante donde jugadores de todas las edades pueden alcanzar su máximo potencial, siempre inspirados por el horizonte costero.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Fundadores -->
+    <section class="py-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto bg-tertiary">
+        <div class="text-center mb-12">
+            <h2 class="font-heading text-2xl font-bold text-primary mb-4">Nuestros Fundadores</h2>
+            <p class="font-body text-neutral/70 max-w-2xl mx-auto">
+                Visionarios que transformaron un sueño costero en el epicentro del tenis regional.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+            <% fundadores.forEach((persona) => { %>
+                <div class="bg-white rounded-xl coastal-shadow flex flex-col md:flex-row overflow-hidden">
+                    <div class="w-full md:w-2/5 min-h-[220px]">
+                        <!-- Espacio reservado para foto de <%= persona.nombre %> -->
+                        <img class="w-full h-full object-cover" src="<%= persona.imagen %>" alt="<%= persona.nombre %>">
+                    </div>
+                    <div class="w-full md:w-3/5 p-8 flex flex-col justify-center">
+                        <h3 class="font-heading text-lg font-bold text-primary mb-2"><%= persona.nombre %></h3>
+                        <p class="font-body text-neutral/80"><%= persona.bio %></p>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+
+    <!-- Staff Técnico -->
+    <section class="py-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto bg-white">
+        <div class="mb-12 border-l-4 border-secondary pl-6">
+            <h2 class="font-heading text-2xl font-bold text-primary">Staff Técnico</h2>
+            <p class="font-body text-neutral/70 mt-2">Profesionales dedicados a pulir tu técnica y estrategia.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter lg:gap-12">
+            <% staff.forEach((persona) => { %>
+                <div class="bg-white rounded-xl coastal-shadow flex flex-col md:flex-row overflow-hidden border border-neutral/10 hover:shadow-lg transition-shadow">
+                    <div class="w-full md:w-2/5 min-h-[220px]">
+                        <!-- Espacio reservado para foto de <%= persona.nombre %> -->
+                        <img class="w-full h-full object-cover" src="<%= persona.imagen %>" alt="<%= persona.nombre %>">
+                    </div>
+                    <div class="w-full md:w-3/5 p-8 flex flex-col justify-center">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-heading text-lg font-bold text-primary"><%= persona.nombre %></h3>
+                            <span class="bg-primary/10 text-primary font-body text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded">
+                                <%= persona.rol %>
+                            </span>
+                        </div>
+                        <p class="font-body text-neutral/80"><%= persona.bio %></p>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+
+    <!-- Llamado a la acción: mismo patrón que la sección "¿Listo para jugar?" del
+         Inicio (partials/contacto-mapa.ejs) — fondo bg-tertiary (beige suave) en vez
+         de un color fuerte para todo el recuadro, así se distingue del footer (azul
+         marino) sin ser agresivo. El acento lima queda solo en el botón. -->
+    <section class="py-24 px-margin-mobile md:px-margin-desktop bg-tertiary text-center">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-primary mb-6">
+                Únete a nuestro Club
+            </h2>
+            <p class="font-body text-lg text-neutral/70 mb-10">
+                Sé parte de la comunidad tenística más exclusiva de la costa. Disfruta de beneficios únicos, prioridad en reservas y torneos internos.
+            </p>
+            <a href="/autenticacion/registro" class="inline-block bg-secondary text-neutral font-heading font-bold px-8 py-4 rounded-xl border border-primary/20 coastal-shadow hover:scale-105 transition-transform active:scale-95">
+                Hazte Socio Hoy
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

@@ -29,6 +29,7 @@
         <div class="space-y-4">
             <h4 class="font-heading text-lg text-white">Enlaces Rápidos</h4>
             <div class="grid grid-cols-1 gap-2">
+                <a href="/sobre-el-club" class="font-body text-sm text-white/80 hover:text-white transition-colors">Sobre el Club</a>
                 <a href="/canchas" class="font-body text-sm text-white/80 hover:text-white transition-colors">Reserva de Canchas</a>
                 <a href="/escalerilla" class="font-body text-sm text-white/80 hover:text-white transition-colors">Ranking Escalerilla</a>
                 <a href="/noticias" class="font-body text-sm text-white/80 hover:text-white transition-colors">Noticias</a>
@@ -39,7 +40,7 @@
     </div>
 
     <div class="border-t border-white/10 px-margin-desktop py-8 max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="font-body text-xs text-white/60 text-center">© 2021 <%= nombreClub %>. Todos los derechos reservados.</p>
+        <p class="font-body text-xs text-white/60 text-center">© <%= new Date().getFullYear() %> <%= nombreClub %>. Todos los derechos reservados.</p>
         <div class="flex gap-6">
             <!-- Espacio reservado para íconos de redes sociales -->
             <a href="#" class="icon"></a>

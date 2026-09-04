@@ -7,12 +7,22 @@
             <span class="font-heading text-2xl font-bold text-white"><%= nombreClub %></span>
         </div>
 
+        <%
+        // "paginaActual" nos dice en qué página estamos, para poder resaltar
+        // el link correspondiente en el menú (en vez de dejar "Inicio" marcado
+        // siempre, sin importar dónde estés navegando). Si una vista todavía no
+        // manda este dato, usamos 'inicio' por defecto para no romper nada.
+        const activa = typeof paginaActual !== 'undefined' ? paginaActual : 'inicio';
+        const claseActiva = 'font-body text-sm text-white font-bold border-b-2 border-secondary pb-1';
+        const claseInactiva = 'font-body text-sm text-white/80 hover:text-white transition-colors';
+        %>
+
         <div class="hidden md:flex items-center justify-center flex-1 gap-8">
-            <a href="/" class="font-body text-sm text-white font-bold border-b-2 border-secondary pb-1">Inicio</a>
-            <a href="/sobre-el-club" class="font-body text-sm text-white/80 hover:text-white transition-colors">Sobre el Club</a>
-            <a href="/canchas" class="font-body text-sm text-white/80 hover:text-white transition-colors">Canchas</a>
-            <a href="/escalerilla" class="font-body text-sm text-white/80 hover:text-white transition-colors">Escalerilla</a>
-            <a href="/noticias" class="font-body text-sm text-white/80 hover:text-white transition-colors">Noticias</a>
+            <a href="/" class="<%= activa === 'inicio' ? claseActiva : claseInactiva %>">Inicio</a>
+            <a href="/sobre-el-club" class="<%= activa === 'sobre-el-club' ? claseActiva : claseInactiva %>">Sobre el Club</a>
+            <a href="/canchas" class="<%= activa === 'canchas' ? claseActiva : claseInactiva %>">Canchas</a>
+            <a href="/escalerilla" class="<%= activa === 'escalerilla' ? claseActiva : claseInactiva %>">Escalerilla</a>
+            <a href="/noticias" class="<%= activa === 'noticias' ? claseActiva : claseInactiva %>">Noticias</a>
         </div>
 
         <div class="flex items-center gap-4">
