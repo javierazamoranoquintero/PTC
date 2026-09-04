@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('partials/head', { title: 'Canchas' }) %>
+</head>
+<body class="flex flex-col min-h-screen">
+
+<%- include('partials/navbar', { nombreClub: nombreClub, paginaActual: 'canchas' }) %>
+
+<main class="flex-grow">
+
+    <!-- Hero -->
+    <section class="relative w-full flex items-center justify-center overflow-hidden pt-20" style="height: 45vh;">
+        <div class="absolute inset-0 z-0">
+            <div class="w-full h-full bg-cover bg-center" style="background-image: url('/images/canchas-hero.jpg');"></div>
+            <div class="absolute inset-0 hero-gradient"></div>
+        </div>
+        <div class="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-3xl">
+            <h1 class="font-heading text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-md">Nuestras Canchas</h1>
+            <p class="font-body text-lg text-white/90 drop-shadow max-w-2xl mx-auto">Instalaciones de primer nivel, pensadas para un rendimiento óptimo con la brisa del Pacífico como compañera constante.</p>
+        </div>
+    </section>
+
+    <!-- Canchas de Arcilla + Cancha de Pádel, agrupadas en un mismo contenedor beige -->
+    <section class="py-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <div class="bg-tertiary rounded-2xl p-6 md:p-10">
+
+            <!-- Bloque 1: Canchas de Arcilla -->
+            <div class="mb-16">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-primary/10">
+                    <div>
+                        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary mb-2">
+                            <span class="icon"></span>Tenis Principal
+                        </span>
+                        <h2 class="font-heading text-2xl md:text-3xl font-bold text-primary">Canchas de Tenis de Arcilla</h2>
+                    </div>
+                    <p class="font-body text-sm text-neutral/70 max-w-md mt-2 md:mt-0">Polvo de ladrillo premium mantenido bajo estándares profesionales para un bote impecable frente al Pacífico.</p>
+                </div>
+
+                <% if (canchasArcilla.length > 0) { %>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-8">
+                        <% canchasArcilla.forEach((cancha) => { %>
+                            <div class="bg-white rounded-2xl coastal-shadow overflow-hidden border border-primary/10 flex flex-col">
+
+                                <!-- Carrusel de fotos (3 por cancha) -->
+                                <div class="relative h-64 overflow-hidden" data-carousel>
+                                    <div class="flex h-full transition-transform duration-500 ease-out" data-carousel-track>
+                                        <img class="w-full h-full object-cover flex-shrink-0" src="/images/cancha-<%= cancha.id %>-1.jpg" alt="<%= cancha.nombre %> - foto 1">
+                                        <img class="w-full h-full object-cover flex-shrink-0" src="/images/cancha-<%= cancha.id %>-2.jpg" alt="<%= cancha.nombre %> - foto 2">
+                                        <img class="w-full h-full object-cover flex-shrink-0" src="/images/cancha-<%= cancha.id %>-3.jpg" alt="<%= cancha.nombre %> - foto 3">
+                                    </div>
+                                    <button type="button" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-8 h-8 flex items-center justify-center shadow" data-carousel-prev aria-label="Foto anterior">‹</button>
+                                    <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-8 h-8 flex items-center justify-center shadow" data-carousel-next aria-label="Foto siguiente">›</button>
+                                    <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5" data-carousel-dots>
+                                        <span class="w-2 h-2 rounded-full bg-white/60" data-carousel-dot></span>
+                                        <span class="w-2 h-2 rounded-full bg-white/60" data-carousel-dot></span>
+                                        <span class="w-2 h-2 rounded-full bg-white/60" data-carousel-dot></span>
+                                    </div>
+                                </div>
+
+                                <div class="p-6 md:p-8 flex-grow flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h3 class="font-heading text-xl font-bold text-primary"><%= cancha.nombre %></h3>
+                                            <span class="text-xs font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full"><%= cancha.etiquetaCard %></span>
+                                        </div>
+                                        <p class="font-body text-sm text-neutral/80 leading-relaxed mb-6"><%= cancha.descripcion %></p>
+                                        <div class="grid grid-cols-2 gap-3 mb-6">
+                                            <% cancha.features.forEach((feature) => { %>
+                                                <div class="flex items-center gap-2 text-xs font-semibold text-neutral/70">
+                                                    <span class="icon"></span><%= feature %>
+                                                </div>
+                                            <% }) %>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-4 border-t border-primary/10">
+                                        <span class="font-body text-sm text-neutral/60 flex items-center gap-1.5"><span class="icon"></span>Consultar valor</span>
+                                        <a href="/reservas" class="bg-primary text-white font-heading font-bold px-5 py-2.5 rounded-xl hover:opacity-90 transition-colors">Agendar <%= cancha.nombre %></a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <p class="font-body text-neutral/70 text-center mb-8">Aún no hay canchas de arcilla registradas.</p>
+                <% } %>
+
+                <!-- Features generales del club (no dependen de una cancha en particular) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+                    <div class="bg-primary text-white rounded-2xl p-6 flex items-center gap-4 coastal-shadow">
+                        <span class="icon flex-shrink-0"></span>
+                        <div>
+                            <h4 class="font-heading font-bold text-base mb-1">Iluminación Nocturna LED</h4>
+                            <p class="font-body text-xs text-white/80">Torres de iluminación homologadas para competencias sin deslumbramiento ni zonas ciegas.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-primary/10 rounded-2xl p-6 flex items-center gap-4 coastal-shadow">
+                        <span class="icon flex-shrink-0"></span>
+                        <div>
+                            <h4 class="font-heading font-bold text-base text-primary mb-1">Mantenimiento Diario Especializado</h4>
+                            <p class="font-body text-xs text-neutral/70">Riego programado y rastrillado minucioso entre turnos para salvaguardar la consistencia del polvo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 2: Cancha de Pádel -->
+            <div>
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-primary/10">
+                    <div>
+                        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary mb-2">
+                            <span class="icon"></span>Instalación Exclusiva
+                        </span>
+                        <h2 class="font-heading text-2xl md:text-3xl font-bold text-primary">Cancha de Pádel Panorámica</h2>
+                    </div>
+                    <p class="font-body text-sm text-neutral/70 max-w-md mt-2 md:mt-0">Arquitectura moderna con vista 360° y césped sintético pro para una experiencia de juego superior.</p>
+                </div>
+
+                <% if (canchasPadel.length > 0) { %>
+                    <% canchasPadel.forEach((cancha) => { %>
+                        <div class="bg-white rounded-2xl coastal-shadow overflow-hidden border border-primary/10 grid grid-cols-1 md:grid-cols-12">
+
+                            <!-- Carrusel de fotos (3 por cancha) -->
+                            <div class="md:col-span-7 relative h-72 md:h-auto overflow-hidden" data-carousel>
+                                <div class="flex h-full transition-transform duration-500 ease-out" data-carousel-track>
+                                    <img class="w-full h-full object-cover flex-shrink-0" src="/images/cancha-<%= cancha.id %>-1.jpg" alt="<%= cancha.nombre %> - foto 1">
+                                    <img class="w-full h-full object-cover flex-shrink-0" src="/images/cancha-<%= cancha.id %>-2.jpg" alt="<%= cancha.nombre %> - foto 2">
+                                    <img class="w-full h-full object-cover flex-shrink-0" src="/images/cancha-<%= cancha.id %>-3.jpg" alt="<%= cancha.nombre %> - foto 3">
+                                </div>
+                                <button type="button" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-8 h-8 flex items-center justify-center shadow" data-carousel-prev aria-label="Foto anterior">‹</button>
+                                <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-8 h-8 flex items-center justify-center shadow" data-carousel-next aria-label="Foto siguiente">›</button>
+                                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5" data-carousel-dots>
+                                    <span class="w-2 h-2 rounded-full bg-white/60" data-carousel-dot></span>
+                                    <span class="w-2 h-2 rounded-full bg-white/60" data-carousel-dot></span>
+                                    <span class="w-2 h-2 rounded-full bg-white/60" data-carousel-dot></span>
+                                </div>
+                                <div class="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-secondary"></span>NUEVA INSTALACIÓN
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-5 p-6 md:p-8 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="font-heading text-xl font-bold text-primary"><%= cancha.nombre %></h3>
+                                        <span class="text-xs font-bold bg-secondary/20 text-primary px-2.5 py-1 rounded-full"><%= cancha.etiquetaCard %></span>
+                                    </div>
+                                    <p class="font-body text-sm text-neutral/80 leading-relaxed mb-6"><%= cancha.descripcion %></p>
+                                    <div class="space-y-3 mb-6">
+                                        <% cancha.features.forEach((feature) => { %>
+                                            <div class="flex items-center gap-3 text-sm text-neutral/80">
+                                                <span class="icon flex-shrink-0"></span><%= feature %>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between pt-4 border-t border-primary/10">
+                                    <span class="font-body text-sm text-neutral/60 flex items-center gap-1.5"><span class="icon"></span>Consultar valor</span>
+                                    <a href="/reservas" class="bg-secondary text-neutral font-heading font-bold px-6 py-3 rounded-xl border border-primary/20 hover:scale-105 transition-transform active:scale-95">Agendar Pádel</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p class="font-body text-neutral/70 text-center">Aún no hay cancha de pádel registrada.</p>
+                <% } %>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="py-24 px-margin-mobile md:px-margin-desktop bg-tertiary text-center">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-primary mb-6">¿Listo para jugar?</h2>
+            <p class="font-body text-lg text-neutral/70 mb-10">Reserva tu hora fácilmente a través de nuestra plataforma online y asegura tu espacio en la costa.</p>
+            <a href="/reservas" class="inline-block bg-secondary text-neutral font-heading font-bold px-8 py-4 rounded-xl border border-primary/20 coastal-shadow hover:scale-105 transition-transform active:scale-95">Ir al Sistema de Reservas</a>
+        </div>
+    </section>
+
+</main>
+<%- include('partials/footer') %>
+<script src="/javascripts/canchas.js" defer></script>
+</body>
+</html>
