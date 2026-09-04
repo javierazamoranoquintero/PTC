@@ -41,6 +41,13 @@ Usuario.init(
             allowNull: false,
             defaultValue: false,
         },
+        // Nullable en la base (ver migración): los socios antiguos no lo
+        // tienen. El registro público SÍ lo exige (se valida en el
+        // controlador de autenticación, no acá).
+        marcaRaqueta: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     },
     {
         sequelize,

@@ -8,17 +8,17 @@ export const mostrarRegistro = (req, res) => {
     res.render('autenticacion/registro', {
         title: 'Crear cuenta',
         error: null,
-        valores: { nombre: '', email: '' },
+        valores: { nombre: '', email: '', marcaRaqueta: '' },
     });
 };
 
 export const registrar = async (req, res, next) => {
-    const { nombre, email, password, confirmarPassword } = req.body;
-    const valores = { nombre, email }; // para repoblar el formulario si algo falla (nunca la password)
+    const { nombre, email, marcaRaqueta, password, confirmarPassword } = req.body;
+    const valores = { nombre, email, marcaRaqueta }; // para repoblar el formulario si algo falla (nunca la password)
 
     try {
         // --- Validaciones simples de formulario ---
-        if (!nombre || !email || !password || !confirmarPassword) {
+        if (!nombre || !email || !marcaRaqueta || !password || !confirmarPassword) {
             return res.render('autenticacion/registro', {
                 title: 'Crear cuenta',
                 error: 'Todos los campos son obligatorios.',
@@ -59,6 +59,7 @@ export const registrar = async (req, res, next) => {
         const nuevoUsuario = await Usuario.create({
             nombre,
             email,
+            marcaRaqueta,
             passwordHash,
             rol: 'socio', // el registro público SIEMPRE crea socios; nunca admins
         });
