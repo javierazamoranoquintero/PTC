@@ -10,7 +10,11 @@
                 <a href="/canchas" class="bg-secondary text-neutral px-8 py-3 rounded-lg font-bold border border-primary/20 hover:scale-105 transition-transform active:scale-95">
                     Ir al Sistema de Reservas
                 </a>
-                <a href="/contacto" class="border border-primary/30 text-primary px-8 py-3 rounded-lg font-bold hover:bg-primary/5 transition-colors">
+                <!-- Antes iba a /contacto: se decidió no construir esa página
+                     aparte y en su lugar mostrar los datos de contacto en el
+                     footer (ver partials/footer.ejs), así que este botón
+                     ahora abre directo el correo del club. -->
+                <a href="mailto:contacto@pichilemutennisclub.cl" class="border border-primary/30 text-primary px-8 py-3 rounded-lg font-bold hover:bg-primary/5 transition-colors">
                     Contactar
                 </a>
             </div>

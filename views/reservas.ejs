@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('partials/head', { title: 'Reservas' }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary">
+
+<%- include('partials/navbar', { nombreClub: nombreClub, paginaActual: 'reservas' }) %>
+
+<!-- Sprite de íconos de raqueta (los mismos de Escalerilla y Panel del
+     Socio) — se incluye una sola vez acá, y se usa más abajo con <use>. -->
+<%- include('partials/iconos-raqueta') %>
+
+<main class="flex-grow pt-32 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+
+    <div class="mb-10 text-center md:text-left">
+        <h1 class="font-heading text-3xl md:text-5xl font-bold text-primary mb-3">Reserva tu Cancha</h1>
+        <p class="font-body text-lg text-neutral/70 max-w-2xl mx-auto md:mx-0">
+            Selecciona el día, la cancha y el horario que mejor te acomode. Disfruta del tenis a pasos del mar.
+        </p>
+    </div>
+
+    <!-- Aviso para quien todavía no inició sesión: puede ver la
+         disponibilidad, pero para reservar necesita loguearse. -->
+    <% if (!usuario) { %>
+        <div class="mb-8 bg-secondary/20 border border-secondary/40 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+            <svg class="w-6 h-6 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+                <path d="M12 8V13M12 16V16.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+            <p class="font-body text-sm text-neutral">
+                Puedes ver la disponibilidad de horarios libremente. Para reservar una cancha necesitas
+                <a href="/autenticacion/login" class="font-bold text-primary underline">iniciar sesión</a>.
+            </p>
+        </div>
+    <% } %>
+
+    <% if (mensajeExito) { %>
+        <div class="mb-8 bg-green-50 border border-green-200 rounded-xl p-4">
+            <p class="font-body text-sm text-green-700 font-semibold"><%= mensajeExito %></p>
+        </div>
+    <% } %>
+
+    <% if (error) { %>
+        <div class="mb-8 bg-red-50 border border-red-200 rounded-xl p-4">
+            <p class="font-body text-sm text-red-700 font-semibold"><%= error %></p>
+        </div>
+    <% } %>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+
+        <!-- Selector de fecha + información del club -->
+        <aside class="lg:col-span-4 flex flex-col gap-8">
+
+            <div class="bg-white rounded-xl coastal-shadow border border-tertiary p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-heading text-xl font-bold text-primary">Fecha</h2>
+                    <!-- Pista visual de que hay más fechas para el lado (doble
+                         flecha ">>"). Va acá, en el encabezado, y NO encima de
+                         las fechas mismas — así nunca compite con el clic de
+                         un día por accidente. -->
+                    <svg class="w-4 h-4 text-primary/40 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M6 5L12 12L6 19M13 5L19 12L13 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                <div class="flex gap-3 overflow-x-auto pb-2 snap-x">
+                    <% fechasDisponibles.forEach((dia) => { %>
+                        <a
+                                href="/reservas?fecha=<%= dia.valor %>"
+                                class="flex-shrink-0 w-[68px] h-[80px] rounded-lg flex flex-col items-center justify-center snap-center transition-all <%= dia.activa ? 'bg-secondary text-primary font-bold shadow-md scale-105' : 'bg-tertiary text-neutral/70 border border-tertiary hover:border-primary/30' %>"
+                        >
+                            <span class="font-body text-[10px] uppercase tracking-wide opacity-80"><%= dia.diaSemana %></span>
+                            <span class="font-heading text-lg font-bold mt-1"><%= dia.diaNumero %></span>
+                            <span class="font-body text-[10px] uppercase opacity-80 mt-1"><%= dia.mesCorto %></span>
+                        </a>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="bg-primary text-white rounded-xl coastal-shadow p-6">
+                <div class="flex items-center gap-2 mb-4 pb-4 border-b border-white/10">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+                        <path d="M12 8V13M12 16V16.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    </svg>
+                    <h3 class="font-heading text-lg font-bold">Información</h3>
+                </div>
+                <ul class="space-y-3 font-body text-sm text-white/85">
+                    <li class="flex items-start gap-2">
+                        <span class="text-secondary font-bold flex-shrink-0">✓</span>
+                        Bloques de 30 minutos, entre las 07:00 y las 22:00.
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-secondary font-bold flex-shrink-0">✓</span>
+                        Reserva mínima de 1 hora 30 minutos (puedes elegir más tiempo).
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-secondary font-bold flex-shrink-0">✓</span>
+                        Puedes reservar hasta 14 días por adelantado.
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-secondary font-bold flex-shrink-0">✓</span>
+                        Debes reservar con al menos 2 horas de anticipación.
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-secondary font-bold flex-shrink-0">✓</span>
+                        Cancelaciones con 24 horas de aviso.
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Grilla de canchas y horarios -->
+        <section class="lg:col-span-8 flex flex-col gap-8">
+            <% canchas.forEach((cancha) => { %>
+                <!-- <details>/<summary> es un acordeón nativo del navegador:
+                     se abre y cierra solo con CSS/HTML, sin una línea de
+                     JavaScript. La clase "group" es lo que permite que la
+                     flecha de más abajo (con "group-open:") sepa si ESTE
+                     <details> está abierto o cerrado, para girarse. -->
+                <details class="group bg-white rounded-xl coastal-shadow border border-tertiary overflow-hidden <%= cancha.tipo === 'padel' ? 'border-t-4 border-t-primary' : '' %>">
+                    <summary class="bg-white p-6 border-b border-tertiary flex justify-between items-center cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
+                        <div>
+                            <h3 class="font-heading text-xl font-bold text-primary"><%= cancha.nombre %></h3>
+                            <p class="font-body text-xs text-neutral/60 mt-0.5 capitalize"><%= fechaSeleccionadaFormateada %></p>
+                            <span class="inline-block font-body text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded mt-2 <%= cancha.tipo === 'padel' ? 'bg-primary text-white' : 'bg-primary/10 text-primary' %>">
+                                <%= cancha.tipo === 'padel' ? 'Pádel' : 'Arcilla' %>
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-4 flex-shrink-0">
+                            <% if (cancha.tipo === 'padel') { %>
+                                <!-- Ícono de pala de pádel que mandó Javiera.
+                                     Se le cambió fill="#000000" (fijo, negro)
+                                     por fill="currentColor" en cada <path> —
+                                     así el ícono "hereda" el color que le
+                                     demos por CSS (acá, un gris suave), igual
+                                     que el resto de los íconos del sitio. -->
+                                <svg class="w-8 h-8 text-neutral/50" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M0 0 C4.46876455 3.07848225 8.07974831 6.73924494 9.8125 11.9375 C10.4930012 19.46763622 10.32407217 25.69171078 5.8125 31.9375 C4.03158269 34.01782917 2.2207517 36.02760801 0.30078125 37.98046875 C-2.40103221 41.53324708 -2.31455392 45.42488719 -2.25 49.75 C-2.24097656 50.54019531 -2.23195313 51.33039062 -2.22265625 52.14453125 C-2.21105469 52.73621094 -2.19945313 53.32789063 -2.1875 53.9375 C-1.80078125 53.37160156 -1.4140625 52.80570313 -1.015625 52.22265625 C-0.49484375 51.48917969 0.0259375 50.75570312 0.5625 50 C1.07296875 49.26910156 1.5834375 48.53820313 2.109375 47.78515625 C4.03551888 45.69555521 4.98980008 45.10975137 7.8125 44.9375 C10.8125 46.9375 10.8125 46.9375 11.4375 49.1875 C10.24463275 54.43611588 5.33318927 56.876554 1.125 59.8125 C-3.92676077 61.52819234 -8.90239181 61.16840279 -14.1875 60.9375 C-14.16429687 59.85210937 -14.14109375 58.76671875 -14.1171875 57.6484375 C-14.0984173 56.20313193 -14.08021844 54.75781885 -14.0625 53.3125 C-14.04574219 52.59964844 -14.02898438 51.88679688 -14.01171875 51.15234375 C-13.94630774 44.02254353 -15.45999697 39.35855591 -20.1875 33.875 C-25.57777159 27.60286412 -26.60378225 22.98154805 -26.43359375 14.8125 C-25.97346761 9.43705809 -24.14636428 6.85467453 -20.3125 3.1875 C-13.86419123 -1.45528231 -7.60620774 -2.53540258 0 0 Z M-21.578125 7.4765625 C-24.74451044 12.18154368 -25.13324359 17.42492248 -24.1875 22.9375 C-22.2344215 27.57139644 -19.53185142 31.43230326 -16.375 35.3125 C-15.96185547 35.85777344 -15.54871094 36.40304688 -15.12304688 36.96484375 C-12.97888637 39.60126915 -11.54589507 40.84825538 -8.22265625 41.67578125 C-3.95733846 40.63827152 -2.02780445 38.07577871 0.5625 34.75 C1.04332031 34.17185547 1.52414063 33.59371094 2.01953125 32.99804688 C7.21861261 26.58970844 8.6454581 21.16130856 7.8125 12.9375 C6.01896165 7.65652596 3.20250798 5.13854749 -1.1875 1.9375 C-9.36709352 -0.78903117 -15.84875386 1.13562927 -21.578125 7.4765625 Z M-12.1875 42.9375 C-12.1875 43.2675 -12.1875 43.5975 -12.1875 43.9375 C-9.5475 43.9375 -6.9075 43.9375 -4.1875 43.9375 C-4.1875 43.6075 -4.1875 43.2775 -4.1875 42.9375 C-6.8275 42.9375 -9.4675 42.9375 -12.1875 42.9375 Z M4.8125 47.9375 C3.2488243 49.44984366 3.2488243 49.44984366 2.0625 51.4375 C1.63453125 52.0871875 1.2065625 52.736875 0.765625 53.40625 C0.45109375 53.9115625 0.1365625 54.416875 -0.1875 54.9375 C0.1425 55.5975 0.4725 56.2575 0.8125 56.9375 C2.15423403 56.01206291 3.48570159 55.07172595 4.8125 54.125 C5.555 53.60292969 6.2975 53.08085938 7.0625 52.54296875 C7.64 52.01316406 8.2175 51.48335937 8.8125 50.9375 C8.8125 49.9475 8.8125 48.9575 8.8125 47.9375 C7.4925 47.9375 6.1725 47.9375 4.8125 47.9375 Z M-12.1875 57.9375 C-8.1875 58.9375 -8.1875 58.9375 -8.1875 58.9375 Z " fill="currentColor" transform="translate(40.1875,2.0625)"/>
+                                    <path d="M0 0 C4.62 0 9.24 0 14 0 C14.33 0.99 14.66 1.98 15 3 C13.78515625 5.04296875 13.78515625 5.04296875 12.0625 7.1875 C11.49660156 7.90292969 10.93070313 8.61835937 10.34765625 9.35546875 C9.90292969 9.89816406 9.45820312 10.44085938 9 11 C6.1834702 10.91952772 4.51090251 10.52438279 2.51953125 8.48046875 C-0.06208827 5.04554081 -0.06208827 5.04554081 -1 3 C-0.67 2.01 -0.34 1.02 0 0 Z M3 3 C4.36983503 6.16115776 4.9890638 6.9927092 8 9 C10.34287418 6.32752366 10.34287418 6.32752366 11 3 C8.36 3 5.72 3 3 3 Z " fill="currentColor" transform="translate(25,31)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 3.3 4 6.6 4 10 C2.68 10 1.36 10 0 10 C0 6.7 0 3.4 0 0 Z " fill="currentColor" transform="translate(36,19)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 3.3 4 6.6 4 10 C2.68 10 1.36 10 0 10 C0 6.7 0 3.4 0 0 Z " fill="currentColor" transform="translate(30,19)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 3.3 4 6.6 4 10 C2.68 10 1.36 10 0 10 C0 6.7 0 3.4 0 0 Z " fill="currentColor" transform="translate(24,19)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C3.67 1.65 3.34 3.3 3 5 C2.01 4.67 1.02 4.34 0 4 C0 2.68 0 1.36 0 0 Z " fill="currentColor" transform="translate(42,19)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C3.67 1.65 3.34 3.3 3 5 C2.01 4.67 1.02 4.34 0 4 C0 2.68 0 1.36 0 0 Z " fill="currentColor" transform="translate(18,19)"/>
+                                    <path d="M0 0 C0.99 0.33 1.98 0.66 3 1 C3 2.32 3 3.64 3 5 C1.68 5 0.36 5 -1 5 C-0.67 3.35 -0.34 1.7 0 0 Z " fill="currentColor" transform="translate(37,8)"/>
+                                    <path d="M0 0 C0.99 0.33 1.98 0.66 3 1 C3 2.32 3 3.64 3 5 C1.68 5 0.36 5 -1 5 C-0.67 3.35 -0.34 1.7 0 0 Z " fill="currentColor" transform="translate(31,8)"/>
+                                    <path d="M0 0 C0.99 0.33 1.98 0.66 3 1 C3 2.32 3 3.64 3 5 C1.68 5 0.36 5 -1 5 C-0.67 3.35 -0.34 1.7 0 0 Z " fill="currentColor" transform="translate(25,8)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 1.32 4 2.64 4 4 C2.68 4 1.36 4 0 4 C0 2.68 0 1.36 0 0 Z " fill="currentColor" transform="translate(42,14)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 1.32 4 2.64 4 4 C2.68 4 1.36 4 0 4 C0 2.68 0 1.36 0 0 Z " fill="currentColor" transform="translate(36,14)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 1.32 4 2.64 4 4 C2.68 4 1.36 4 0 4 C0 2.68 0 1.36 0 0 Z " fill="currentColor" transform="translate(30,14)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 1.32 4 2.64 4 4 C2.68 4 1.36 4 0 4 C0 2.68 0 1.36 0 0 Z " fill="currentColor" transform="translate(24,14)"/>
+                                    <path d="M0 0 C1.32 0 2.64 0 4 0 C4 1.32 4 2.64 4 4 C2.68 4 1.36 4 0 4 C0 2.68 0 1.36 0 0 Z " fill="currentColor" transform="translate(18,14)"/>
+                                </svg>
+                            <% } else { %>
+                                <!-- Cancha de arcilla (tenis): mismo ícono de
+                                     raqueta que Escalerilla y Panel del Socio
+                                     (sprite compartido), pero "grayscale" le
+                                     quita el color para que quede gris acá,
+                                     como pidió Javiera. -->
+                                <svg class="w-9 h-9 grayscale opacity-40" viewBox="0 0 128 128" aria-hidden="true">
+                                    <use href="#icono-raqueta-azul"></use>
+                                </svg>
+                            <% } %>
+                            <!-- Flecha que indica "abrir/cerrar": gira 180°
+                                 cuando el <details> está abierto, gracias a
+                                 "group-open:rotate-180". -->
+                            <svg class="w-5 h-5 text-primary/50 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                    </summary>
+
+                    <!-- Fondo gris solo en la parte desplegada (la grilla de
+                         horarios), para que se note el contraste con las
+                         tarjetas blancas de cada horario. El encabezado de
+                         arriba (summary) y la caja de "Fecha" del costado se
+                         quedan blancos, tal como pidió Javiera. -->
+                    <div class="p-6 bg-gray-50">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            <% cancha.horarios.forEach((horario) => { %>
+                                <% if (horario.estado === 'disponible' && usuario) { %>
+                                    <!-- Horario libre y hay sesión iniciada: se puede reservar
+                                         directamente desde acá (hora de inicio + duración). -->
+                                    <form action="/reservas" method="POST">
+                                        <input type="hidden" name="canchaId" value="<%= cancha.id %>">
+                                        <input type="hidden" name="fecha" value="<%= fechaSeleccionada %>">
+                                        <input type="hidden" name="horaInicio" value="<%= horario.horaInicio %>">
+                                        <div class="bg-white border border-tertiary rounded-lg p-3 text-center hover:border-primary/40 transition-colors">
+                                            <span class="block font-heading text-lg font-bold text-primary"><%= horario.horaInicio %></span>
+                                            <select name="duracionMinutos" aria-label="Duración" class="w-full text-xs font-body border border-tertiary rounded mt-2 mb-2 py-1 text-neutral">
+                                                <% duraciones.forEach((duracion) => { %>
+                                                    <option value="<%= duracion.minutos %>"><%= duracion.etiqueta %></option>
+                                                <% }) %>
+                                            </select>
+                                            <button type="submit" class="w-full bg-secondary text-primary text-xs font-bold py-1.5 rounded hover:bg-secondary/90 transition-colors active:scale-95">
+                                                Reservar
+                                            </button>
+                                        </div>
+                                    </form>
+                                <% } else { %>
+                                    <!-- Horario ocupado, ya pasado, o disponible pero sin sesión
+                                         iniciada: solo se muestra el estado, sin poder reservar. -->
+                                    <div class="rounded-lg p-3 text-center border <%= horario.estado === 'disponible' ? 'bg-white border-tertiary' : 'border-transparent bg-tertiary/50 opacity-60' %>">
+                                        <span class="block font-heading text-lg font-bold <%= horario.estado === 'disponible' ? 'text-primary' : 'text-neutral/40 line-through' %>">
+                                            <%= horario.horaInicio %>
+                                        </span>
+                                        <span class="block font-body text-[11px] text-neutral/50 mt-1">
+                                            <% if (horario.estado === 'ocupado') { %>
+                                                Reservada
+                                            <% } else if (horario.estado === 'muyPronto') { %>
+                                                No disponible
+                                            <% } else { %>
+                                                Disponible
+                                            <% } %>
+                                        </span>
+                                    </div>
+                                <% } %>
+                            <% }) %>
+                        </div>
+                    </div>
+                </details>
+            <% }) %>
+        </section>
+
+    </div>
+
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

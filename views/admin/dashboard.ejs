@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: title }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary/30">
+
+<%- include('../partials/navbar', { nombreClub: nombreClub, paginaActual: 'admin' }) %>
+
+<!-- Este <div> flex es el contenedor real del sidebar + el contenido: por
+     eso el sidebar (sticky) sabe dónde "terminar" y no tapa el footer, que
+     queda AFUERA de este div. Ver el comentario largo en partials/sidebar.ejs
+     para el detalle de por qué. -->
+<div class="flex-grow flex items-start pt-20 w-full">
+    <%- include('partials/sidebar', { paginaActual: 'general' }) %>
+
+    <main class="flex-grow min-w-0">
+        <div class="px-6 md:px-10 py-10 max-w-5xl">
+
+            <div class="mb-8">
+            <span class="font-body text-xs font-bold uppercase tracking-wider text-secondary bg-primary px-3 py-1 rounded-full">
+                Portal Administrativo
+            </span>
+                <h1 class="font-heading text-3xl font-bold text-primary mt-4">Panel de Administración</h1>
+                <p class="font-body text-neutral/60 mt-1">
+                    Gestión de canchas, escalerilla, noticias y torneos de <%= nombreClub %>.
+                </p>
+            </div>
+
+            <!-- KPIs: números reales, calculados en el controlador (mostrarDashboard),
+                 no datos de ejemplo. -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+                <a href="/admin/reservas" class="bg-white coastal-shadow rounded-xl p-6 hover:-translate-y-0.5 transition-transform">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 mb-4">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="2"></rect>
+                            <path d="M3 9H21M8 3V6M16 3V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                        </svg>
+                    </div>
+                    <div class="font-body text-xs uppercase tracking-wider text-neutral/50 font-bold">Reservas Hoy</div>
+                    <div class="font-heading text-2xl font-bold text-primary mt-1"><%= kpis.reservasHoy %></div>
+                </a>
+
+                <a href="/admin/escalerilla" class="bg-white coastal-shadow rounded-xl p-6 hover:-translate-y-0.5 transition-transform">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4 21V13M12 21V7M20 21V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                        </svg>
+                    </div>
+                    <div class="font-body text-xs uppercase tracking-wider text-neutral/50 font-bold">Escalerilla</div>
+                    <div class="font-heading text-2xl font-bold text-primary mt-1"><%= kpis.totalJugadoresEscalerilla %> jugadores</div>
+                </a>
+
+                <a href="/admin/torneos/nuevo" class="bg-white coastal-shadow rounded-xl p-6 hover:-translate-y-0.5 transition-transform">
+                    <div class="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center text-violet-600 mb-4">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M8 21H16M12 17V21M6 4H18V8C18 11.3137 15.3137 14 12 14C8.68629 14 6 11.3137 6 8V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+                        </svg>
+                    </div>
+                    <div class="font-body text-xs uppercase tracking-wider text-neutral/50 font-bold">Torneos Activos</div>
+                    <div class="font-heading text-2xl font-bold text-primary mt-1"><%= kpis.torneosActivos %></div>
+                </a>
+
+                <a href="/admin/noticias" class="bg-white coastal-shadow rounded-xl p-6 hover:-translate-y-0.5 transition-transform">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 mb-4">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"></rect>
+                            <path d="M7 9H17M7 13H17M7 17H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                        </svg>
+                    </div>
+                    <div class="font-body text-xs uppercase tracking-wider text-neutral/50 font-bold">Noticias Publicadas</div>
+                    <div class="font-heading text-2xl font-bold text-primary mt-1"><%= kpis.totalNoticias %></div>
+                </a>
+            </div>
+
+            <!-- Accesos directos: mismas 4 secciones, pero como botones grandes,
+                 para que quede clarísimo hacia dónde ir sin depender solo del
+                 sidebar. -->
+            <div class="bg-white coastal-shadow rounded-xl p-6">
+                <h2 class="font-heading text-lg font-bold text-primary mb-4">Accesos rápidos</h2>
+                <div class="flex flex-wrap gap-3">
+                    <a href="/admin/noticias" class="flex items-center gap-2 px-5 py-3 rounded-lg bg-secondary text-neutral font-bold text-sm hover:brightness-95 transition-all">
+                        + Publicar Noticia
+                    </a>
+                    <a href="/admin/torneos/nuevo" class="flex items-center gap-2 px-5 py-3 rounded-lg bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
+                        + Crear Torneo
+                    </a>
+                    <a href="/admin/cierres/nuevo" class="flex items-center gap-2 px-5 py-3 rounded-lg bg-white border border-primary/20 text-primary font-bold text-sm hover:bg-tertiary transition-all">
+                        Cerrar una Cancha
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

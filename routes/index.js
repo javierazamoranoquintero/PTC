@@ -1,12 +1,23 @@
 import express from 'express';
 import { Cancha } from '../models/index.js';
+import { obtenerClimaPichilemu } from '../helpers/clima.js';
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.render('index', {
-        title: 'Inicio',
-        nombreClub: 'PTC - Pichilemu Tennis Club'
-    });
+router.get('/', async (req, res, next) => {
+    try {
+        // Clima real de Pichilemu para el recuadro "Condiciones de Juego en
+        // Vivo". Puede ser null si Open-Meteo falla — la vista maneja ese
+        // caso mostrando un mensaje en vez de romperse.
+        const clima = await obtenerClimaPichilemu();
+
+        res.render('index', {
+            title: 'Inicio',
+            nombreClub: 'PTC - Pichilemu Tennis Club',
+            clima,
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
 // Página "Sobre el Club": por ahora es contenido estático (texto e imágenes

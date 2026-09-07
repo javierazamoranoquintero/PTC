@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: title }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary/30">
+
+<%- include('../partials/navbar', { nombreClub: nombreClub, paginaActual: 'admin' }) %>
+
+<div class="flex-grow flex items-start pt-20 w-full">
+    <%- include('partials/sidebar', { paginaActual: 'reservas' }) %>
+
+    <main class="flex-grow min-w-0">
+        <div class="px-6 md:px-10 py-10 max-w-5xl">
+
+            <%- include('partials/encabezadoSeccion', { seccion: 'reservas', titulo: 'Gestión de Canchas', subtitulo: fechaFormateada }) %>
+
+            <% if (mensaje) { %>
+                <div class="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+                    <p class="font-body text-sm text-red-700"><%= mensaje %></p>
+                </div>
+            <% } %>
+
+            <div class="bg-white coastal-shadow rounded-xl p-6 md:p-8">
+                <h2 class="font-heading text-lg font-bold text-primary mb-1">Reservas de hoy</h2>
+                <p class="font-body text-sm text-neutral/60 mb-6">
+                    Si un socio avisó que no puede asistir, puedes cancelar su reserva desde acá
+                    (el club libera el horario y el socio recibe una notificación).
+                </p>
+
+                <% if (reservas.length === 0) { %>
+                    <p class="font-body text-sm text-neutral/60">No hay reservas activas para hoy.</p>
+                <% } else { %>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left font-body text-sm">
+                            <thead>
+                            <tr class="text-neutral/50 text-xs uppercase tracking-wider bg-tertiary/40">
+                                <th class="py-3 px-4 rounded-l-lg">Horario</th>
+                                <th class="py-3 px-4">Cancha</th>
+                                <th class="py-3 px-4">Socio</th>
+                                <th class="py-3 px-4 text-right rounded-r-lg">Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-tertiary">
+                            <% reservas.forEach((reserva) => { %>
+                                <tr>
+                                    <td class="py-4 px-4 font-bold text-primary whitespace-nowrap">
+                                        <%= String(reserva.horaInicio).slice(0, 5) %> - <%= String(reserva.horaFin).slice(0, 5) %>
+                                    </td>
+                                    <td class="py-4 px-4 whitespace-nowrap">
+                                        <span class="font-semibold text-primary"><%= reserva.Cancha.nombre %></span>
+                                        <span class="block text-xs text-neutral/50 capitalize"><%= reserva.Cancha.tipo %></span>
+                                    </td>
+                                    <td class="py-4 px-4 whitespace-nowrap">
+                                        <span class="font-semibold text-neutral"><%= reserva.Usuario.nombre %></span>
+                                        <span class="block text-xs text-neutral/50"><%= reserva.Usuario.email %></span>
+                                    </td>
+                                    <td class="py-4 px-4 text-right whitespace-nowrap">
+                                        <form
+                                                action="/admin/reservas/<%= reserva.id %>/cancelar"
+                                                method="POST"
+                                                onsubmit="return confirm('¿Cancelar esta reserva? Se avisará al socio.');"
+                                        >
+                                            <button type="submit" class="font-body text-xs font-bold text-red-600 hover:underline">
+                                                Cancelar
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

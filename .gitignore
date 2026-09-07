@@ -4,3 +4,8 @@ logs/activity.log
 .DS_Store
 .idea/
 .pnpm-store/
+
+# Fotos de perfil subidas por los socios: son datos reales de usuarios, no
+# código del proyecto, así que no se suben al repositorio (cada entorno
+# -desarrollo, producción- tiene las suyas propias en su propio disco).
+public/uploads/

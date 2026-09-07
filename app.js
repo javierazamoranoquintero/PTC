@@ -17,6 +17,7 @@ import autenticacionRouter from "./routes/autenticacion.js";
 import reservasRouter from "./routes/reservas.js";
 import escalerillaRouter from "./routes/escalerilla.js";
 import noticiasRouter from "./routes/noticias.js";
+import panelSocioRouter from "./routes/panelSocio.js";
 import adminRouter from "./routes/admin.js";
 
 // Creación del servidor Express
@@ -88,6 +89,7 @@ app.use('/autenticacion', autenticacionRouter);
 app.use('/reservas', reservasRouter);
 app.use('/escalerilla', escalerillaRouter);
 app.use('/noticias', noticiasRouter);
+app.use('/panel-socio', panelSocioRouter);
 app.use('/admin', adminRouter);
 
 // Error 404

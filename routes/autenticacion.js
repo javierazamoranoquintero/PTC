@@ -2,6 +2,7 @@ import express from 'express';
 import {
     mostrarRegistro,
     registrar,
+    manejarSubidaFotoRegistro,
     mostrarLogin,
     iniciarSesion,
     cerrarSesion,
@@ -12,8 +13,11 @@ const router = express.Router();
 
 // GET muestra el formulario, POST procesa lo que se envió. Es el patrón
 // estándar en Express para cualquier formulario.
+// manejarSubidaFotoRegistro va ANTES de "registrar": primero se procesa el
+// archivo de la foto (y se valida su tipo/tamaño), y solo si eso sale bien
+// se ejecuta la validación del resto del formulario.
 router.get('/registro', redirigeSiYaLogueado, mostrarRegistro);
-router.post('/registro', redirigeSiYaLogueado, registrar);
+router.post('/registro', redirigeSiYaLogueado, manejarSubidaFotoRegistro, registrar);
 
 router.get('/login', redirigeSiYaLogueado, mostrarLogin);
 router.post('/login', redirigeSiYaLogueado, iniciarSesion);

@@ -27,7 +27,19 @@
 
         <div class="flex items-center gap-4">
             <% if (usuario) { %>
-                <span class="hidden md:inline font-body text-sm text-white/80">Hola, <%= usuario.nombre %></span>
+                <!-- "Hola, nombre" ES el link a TU panel privado: evita agregar
+                     un ítem más al menú (que antes desordenaba el navbar en
+                     pantallas medianas) y es un patrón común: el nombre/avatar
+                     de la cuenta lleva a tu panel privado. Para un admin, ese
+                     panel es el de Administración (con el sidebar hacia
+                     Reservas/Escalerilla/Noticias/Torneos); para un socio
+                     normal, sigue siendo el Panel del Socio de siempre. -->
+                <!-- "capitalize" es puramente visual (CSS): pone en mayúscula la
+                     primera letra de cada palabra al mostrarlo, sin tocar cómo
+                     está guardado el nombre en la base de datos. -->
+                <a href="<%= usuario.rol === 'admin' ? '/admin' : '/panel-socio' %>" class="hidden md:inline font-body text-sm text-white/80 hover:text-white hover:underline transition-colors">
+                    Hola, <span class="font-bold text-white capitalize"><%= usuario.nombre %></span>
+                </a>
                 <form action="/autenticacion/logout" method="POST" class="inline">
                     <button type="submit" class="px-6 py-2 border border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all active:scale-95">
                         Cerrar sesión

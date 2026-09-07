@@ -48,6 +48,34 @@ Usuario.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        // --- Datos personales (2026-09-04) ---
+        // Mismo criterio que marcaRaqueta: nullable acá, obligatorio para
+        // cuentas nuevas a nivel de controlador (registro y editar perfil).
+        fotoUrl: {
+            // Ruta pública del archivo, ej: "/uploads/perfiles/<archivo>.jpg".
+            // El archivo en sí vive en disco (carpeta public/uploads/perfiles/),
+            // acá solo se guarda dónde encontrarlo.
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        edad: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        sexo: {
+            type: DataTypes.ENUM('femenino', 'masculino', 'prefiero_no_decir'),
+            allowNull: true,
+        },
+        juegaTenis: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
+        juegaPadel: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
     },
     {
         sequelize,

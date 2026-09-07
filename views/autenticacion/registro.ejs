@@ -19,7 +19,11 @@
             </div>
         <% } %>
 
-        <form action="/autenticacion/registro" method="POST" class="space-y-5">
+        <!-- enctype="multipart/form-data" es OBLIGATORIO para que la foto viaje
+             junto con el resto del formulario. Sin esto, el archivo elegido
+             simplemente no llega al servidor (req.file queda vacío), aunque
+             el resto de los campos de texto sí funcionen normalmente. -->
+        <form action="/autenticacion/registro" method="POST" enctype="multipart/form-data" class="space-y-5">
             <div>
                 <label for="nombre" class="block font-body text-sm font-medium text-neutral mb-1">Nombre completo</label>
                 <input
@@ -30,6 +34,66 @@
                         required
                         class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
                 >
+            </div>
+
+            <div>
+                <label for="foto" class="block font-body text-sm font-medium text-neutral mb-1">Foto de perfil</label>
+                <input
+                        type="file"
+                        id="foto"
+                        name="foto"
+                        accept="image/jpeg,image/png,image/webp"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 font-body file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-white file:font-semibold file:cursor-pointer hover:file:bg-primary/90"
+                >
+                <p class="font-body text-xs text-neutral/50 mt-1">Formatos JPG, PNG o WEBP. Máximo 2MB.</p>
+            </div>
+
+            <div>
+                <label for="edad" class="block font-body text-sm font-medium text-neutral mb-1">Edad</label>
+                <input
+                        type="number"
+                        id="edad"
+                        name="edad"
+                        value="<%= valores.edad %>"
+                        min="3"
+                        max="100"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <div>
+                <span class="block font-body text-sm font-medium text-neutral mb-1">Sexo</span>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="radio" name="sexo" value="femenino" required <%= valores.sexo === 'femenino' ? 'checked' : '' %> class="text-primary focus:ring-primary">
+                        Femenino
+                    </label>
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="radio" name="sexo" value="masculino" required <%= valores.sexo === 'masculino' ? 'checked' : '' %> class="text-primary focus:ring-primary">
+                        Masculino
+                    </label>
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="radio" name="sexo" value="prefiero_no_decir" required <%= valores.sexo === 'prefiero_no_decir' ? 'checked' : '' %> class="text-primary focus:ring-primary">
+                        Prefiero no decir
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <span class="block font-body text-sm font-medium text-neutral mb-1">¿Qué juegas en el club?</span>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="checkbox" name="juegaTenis" value="on" <%= valores.juegaTenis ? 'checked' : '' %> class="rounded text-primary focus:ring-primary">
+                        Tenis
+                    </label>
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="checkbox" name="juegaPadel" value="on" <%= valores.juegaPadel ? 'checked' : '' %> class="rounded text-primary focus:ring-primary">
+                        Pádel
+                    </label>
+                </div>
+                <p class="font-body text-xs text-neutral/50 mt-1">Marca al menos una opción (puedes marcar las dos).</p>
             </div>
 
             <div>

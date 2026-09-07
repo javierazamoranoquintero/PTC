@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../../partials/head', { title: title }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary/30">
+
+<%- include('../../partials/navbar', { paginaActual: 'admin' }) %>
+
+<div class="flex-grow flex items-start pt-20 w-full">
+    <%- include('../partials/sidebar', { paginaActual: 'noticias' }) %>
+
+    <main class="flex-grow min-w-0">
+        <div class="px-6 md:px-10 py-10 max-w-5xl">
+
+            <%- include('../partials/encabezadoSeccion', {
+            seccion: 'noticias',
+            titulo: modoEdicion ? 'Editar noticia' : 'Nueva noticia',
+            }) %>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-start">
+
+                <div class="bg-white rounded-xl coastal-shadow p-8 md:p-10">
+                    <p class="font-body text-sm text-neutral/70 mb-6">
+                        <% if (modoEdicion) { %>
+                            Los cambios se ven de inmediato en la página pública de Noticias.
+                        <% } else { %>
+                            Se publica de inmediato en la página pública de Noticias (no hay borradores, por ahora).
+                        <% } %>
+                    </p>
+
+                    <% if (error) { %>
+                        <div class="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+                            <p class="font-body text-sm text-red-700"><%= error %></p>
+                        </div>
+                    <% } %>
+
+                    <!-- enctype="multipart/form-data" es obligatorio cuando el formulario
+                         incluye un <input type="file">: sin esto, el navegador manda el
+                         formulario como texto plano y la imagen nunca llega al servidor. -->
+                    <form
+                            action="<%= modoEdicion ? `/admin/noticias/${noticiaId}` : '/admin/noticias' %>"
+                            method="POST"
+                            enctype="multipart/form-data"
+                            class="space-y-5"
+                    >
+                        <div>
+                            <label for="titulo" class="block font-body text-sm font-medium text-neutral mb-1">Título</label>
+                            <input
+                                    type="text"
+                                    id="titulo"
+                                    name="titulo"
+                                    value="<%= valores.titulo %>"
+                                    placeholder="Ej: Se viene el Torneo de Verano"
+                                    required
+                                    class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="categoria" class="block font-body text-sm font-medium text-neutral mb-1">Categoría (opcional)</label>
+                            <input
+                                    type="text"
+                                    id="categoria"
+                                    name="categoria"
+                                    value="<%= valores.categoria %>"
+                                    placeholder="Ej: Avisos, Mantenimiento, Tips de Juego"
+                                    class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                            <p class="font-body text-xs text-neutral/50 mt-1">
+                                La categoría especial <strong>Torneo</strong> hace que esta noticia aparezca como
+                                "Torneo Destacado" en la página pública.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label for="contenido" class="block font-body text-sm font-medium text-neutral mb-1">Contenido</label>
+                            <textarea
+                                    id="contenido"
+                                    name="contenido"
+                                    rows="12"
+                                    placeholder="Escribe acá el texto completo de la noticia..."
+                                    required
+                                    class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                            ><%= valores.contenido %></textarea>
+                        </div>
+
+                        <div>
+                            <label for="imagen" class="block font-body text-sm font-medium text-neutral mb-1">
+                                Imagen (opcional)
+                            </label>
+
+                            <% if (modoEdicion && imagenActual) { %>
+                                <div class="flex items-center gap-3 mb-3">
+                                    <img src="<%= imagenActual %>" alt="Imagen actual" class="w-20 h-20 object-cover rounded-lg border border-neutral/20">
+                                    <p class="font-body text-xs text-neutral/60">
+                                        Imagen actual. Sube otra abajo solo si quieres reemplazarla.
+                                    </p>
+                                </div>
+                            <% } %>
+
+                            <input
+                                    type="file"
+                                    id="imagen"
+                                    name="imagen"
+                                    accept="image/jpeg,image/png,image/webp"
+                                    class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                            <p class="font-body text-xs text-neutral/50 mt-1">
+                                JPG, PNG o WEBP, máximo 2MB. Si no subes ninguna, se muestra una imagen de relleno.
+                            </p>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button
+                                    type="submit"
+                                    class="flex-1 bg-primary text-white font-heading font-bold py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-95"
+                            >
+                                <%= modoEdicion ? 'Guardar cambios' : 'Crear noticia' %>
+                            </button>
+                            <% if (modoEdicion) { %>
+                                <a
+                                        href="/admin/noticias"
+                                        class="flex items-center justify-center px-6 rounded-lg border border-neutral/20 font-body text-sm text-neutral hover:bg-tertiary/50 transition-colors"
+                                >
+                                    Cancelar
+                                </a>
+                            <% } %>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-xl coastal-shadow p-8 md:p-10">
+                    <h2 class="font-heading text-lg font-bold text-primary mb-4">Noticias publicadas</h2>
+
+                    <% if (noticias.length === 0) { %>
+                        <p class="font-body text-sm text-neutral/60">Todavía no hay noticias publicadas.</p>
+                    <% } else { %>
+                        <ul class="divide-y divide-primary/10">
+                            <% noticias.forEach((noticia) => { %>
+                                <li class="py-4 flex items-start gap-4">
+                                    <img
+                                            src="<%= noticia.imagenUrl || '/images/noticia-placeholder.jpg' %>"
+                                            alt="<%= noticia.titulo %>"
+                                            class="w-14 h-14 object-cover rounded-lg border border-neutral/10 flex-shrink-0"
+                                    >
+                                    <div class="flex-grow min-w-0">
+                                        <% if (noticia.categoria) { %>
+                                            <span class="inline-block text-primary/70 text-[11px] font-bold uppercase tracking-wider mb-1">
+                                        <%= noticia.categoria %>
+                                    </span>
+                                        <% } %>
+                                        <p class="font-body font-semibold text-primary truncate"><%= noticia.titulo %></p>
+                                        <p class="font-body text-xs text-neutral/60">
+                                            <%= new Date(noticia.createdAt).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-col gap-2 flex-shrink-0">
+                                        <a
+                                                href="/admin/noticias/<%= noticia.id %>/editar"
+                                                class="font-body text-xs font-bold text-primary hover:underline text-center"
+                                        >
+                                            Editar
+                                        </a>
+                                        <form
+                                                action="/admin/noticias/<%= noticia.id %>/eliminar"
+                                                method="POST"
+                                                onsubmit="return confirm('¿Seguro que quieres eliminar esta noticia? Esta acción no se puede deshacer.');"
+                                        >
+                                            <button
+                                                    type="submit"
+                                                    class="font-body text-xs font-bold text-red-600 hover:underline"
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } %>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<%- include('../../partials/footer') %>
+
+</body>
+</html>

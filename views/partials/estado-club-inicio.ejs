@@ -1,0 +1,98 @@
+<!-- "Condiciones de Juego en Vivo": clima real de Pichilemu (Open-Meteo).
+     A diferencia del recuadro de Stitch (fondo con foto), acá usamos un
+     fondo gris suave a propósito: Inicio ya tiene hartas fotos (Hero,
+     Nuestra Historia, Noticias), así que este recuadro se apoya en color
+     plano en vez de sumar una foto más. -->
+<section class="bg-gray-100 border-y border-gray-200 py-8 px-margin-mobile md:px-margin-desktop relative z-20">
+    <div class="max-w-container-max mx-auto">
+        <div class="bg-white rounded-2xl coastal-shadow border border-tertiary p-6 md:p-8">
+
+            <div class="flex flex-wrap items-center gap-3 mb-6 pb-6 border-b border-tertiary">
+                <span class="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse"></span>
+                <span class="font-body text-xs font-bold uppercase tracking-widest text-primary">Condiciones de Juego en Vivo</span>
+                <span class="text-neutral/30 hidden md:inline">•</span>
+                <span class="font-body text-xs text-neutral/60 hidden md:inline">Pichilemu, Chile</span>
+            </div>
+
+            <% if (clima) { %>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+
+                    <!-- Temperatura + descripción -->
+                    <div class="md:col-span-4 flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                            <% if (clima.categoria === 'sol') { %>
+                                <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"></circle>
+                                    <path d="M12 2V4M12 20V22M4 12H2M22 12H20M5 5L6.5 6.5M19 19L17.5 17.5M5 19L6.5 17.5M19 5L17.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                            <% } else if (clima.categoria === 'lluvia') { %>
+                                <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M7 16.5A4.5 4.5 0 0 1 7.5 7.6 6 6 0 0 1 18.9 9 4 4 0 0 1 18 16.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M9 19L8 21M13 19L12 21M17 19L16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                            <% } else if (clima.categoria === 'tormenta') { %>
+                                <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M7 15.5A4.5 4.5 0 0 1 7.5 6.6 6 6 0 0 1 18.9 8 4 4 0 0 1 18 15.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M13 15L10.5 19H13L11 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            <% } else if (clima.categoria === 'nieve') { %>
+                                <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M7 15.5A4.5 4.5 0 0 1 7.5 6.6 6 6 0 0 1 18.9 8 4 4 0 0 1 18 15.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M12 15V22M9 17.5L15 19.5M15 17.5L9 19.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                            <% } else { %>
+                                <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M7 16.5A4.5 4.5 0 0 1 7.5 7.6 6 6 0 0 1 18.9 9 4 4 0 0 1 18 16.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                            <% } %>
+                        </div>
+                        <div>
+                            <span class="font-heading text-3xl md:text-4xl font-bold text-primary block leading-none"><%= clima.temperatura %>°C</span>
+                            <p class="font-body text-sm text-neutral/60 mt-1"><%= clima.descripcion %></p>
+                        </div>
+                    </div>
+
+                    <!-- Viento / Humedad / UV -->
+                    <div class="md:col-span-8 grid grid-cols-3 gap-3 md:gap-4">
+                        <div class="bg-gray-50 rounded-xl p-3 border border-tertiary">
+                            <div class="flex items-center gap-1.5 text-neutral/50 text-xs mb-1">
+                                <svg class="w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M3 8H14.5C16.433 8 18 6.433 18 4.5V4.5C18 2.567 16.433 1 14.5 1V1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M3 13H17.5C19.433 13 21 14.567 21 16.5V16.5C21 18.433 19.433 20 17.5 20V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M3 17.5H10.5C11.8807 17.5 13 18.6193 13 20V20C13 21.1046 12.1046 22 11 22V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                                Viento
+                            </div>
+                            <p class="font-bold text-primary text-base md:text-lg"><%= clima.viento %> km/h</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-xl p-3 border border-tertiary">
+                            <div class="flex items-center gap-1.5 text-neutral/50 text-xs mb-1">
+                                <svg class="w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M12 3C12 3 6 10.5 6 14.5C6 17.5376 8.68629 20 12 20C15.3137 20 18 17.5376 18 14.5C18 10.5 12 3 12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                Humedad
+                            </div>
+                            <p class="font-bold text-primary text-base md:text-lg"><%= clima.humedad %>%</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-xl p-3 border border-tertiary">
+                            <div class="flex items-center gap-1.5 text-neutral/50 text-xs mb-1">
+                                <svg class="w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"></circle>
+                                    <path d="M12 2V4M12 20V22M4 12H2M22 12H20M5 5L6.5 6.5M19 19L17.5 17.5M5 19L6.5 17.5M19 5L17.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                                UV Máx
+                            </div>
+                            <p class="font-bold text-primary text-base md:text-lg"><%= clima.uvMax %></p>
+                        </div>
+                    </div>
+
+                </div>
+            <% } else { %>
+                <p class="font-body text-sm text-neutral/60">Clima no disponible por el momento.</p>
+            <% } %>
+
+        </div>
+    </div>
+</section>

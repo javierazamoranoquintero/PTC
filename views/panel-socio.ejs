@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('partials/head', { title: 'Panel del Socio' }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary">
+
+<%- include('partials/navbar', { nombreClub: nombreClub, paginaActual: 'panel-socio' }) %>
+
+<!-- Íconos de raqueta compartidos (los mismos 2 colores de la Escalerilla
+     pública). Definidos una sola vez en un partial aparte para poder
+     reutilizarlos en varias páginas sin repetir el SVG completo. -->
+<%- include('partials/iconos-raqueta') %>
+
+<%
+// Misma función que en escalerilla.ejs: el color de raqueta es FIJO
+// según si la posición es par o impar (no cambia al recargar la página).
+function iconoRaqueta(posicion) {
+    return posicion % 2 === 0
+            ? { id: 'icono-raqueta-rosa', viewBox: '0 0 64 64' }
+            : { id: 'icono-raqueta-azul', viewBox: '0 0 128 128' };
+}
+
+// Clases reutilizables para las tarjetas del panel. Se separa la base
+// (sombra, hover) del borde, porque la tarjeta de perfil lleva un borde
+// amarillo más grueso para destacarla (ver más abajo), mientras el resto
+// usa un borde gris suave.
+const claseTarjetaBase = 'bg-white rounded-xl coastal-shadow p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1';
+const claseTarjeta = `${claseTarjetaBase} border border-tertiary`;
+const claseTarjetaDestacada = `${claseTarjetaBase} border-2 border-secondary/30`;
+%>
+
+<main class="flex-grow pt-20">
+
+    <!-- Encabezado: fondo gris claro (no el navy del navbar) para que ambos
+         no se confundan visualmente al estar uno pegado al otro. -->
+    <section class="bg-gray-100 border-b border-gray-200 py-12 px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-container-max mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+                <h1 class="font-heading text-3xl md:text-4xl font-bold mb-2 text-primary">Panel del Socio</h1>
+                <p class="font-body text-neutral/70">Bienvenido de vuelta, <%= usuario.nombre %>.</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="/reservas" class="px-6 py-3 bg-secondary text-primary font-heading font-bold rounded-lg hover:bg-secondary/90 hover:shadow-lg transition-all active:scale-95 text-center">
+                    Reservar Nueva Cancha
+                </a>
+                <a href="/panel-socio/editar-perfil" class="px-6 py-3 border border-primary text-primary font-heading font-bold rounded-lg hover:bg-primary/5 transition-all active:scale-95 text-center">
+                    Editar Perfil
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12">
+
+        <!-- Mensajes de resultado tras cancelar una reserva (ver
+             cancelarReservaControlador en panelSocioController.js). -->
+        <% if (mensajeReserva) { %>
+            <div class="mb-8 bg-green-50 border border-green-200 rounded-xl p-4">
+                <p class="font-body text-sm text-green-700 font-semibold"><%= mensajeReserva %></p>
+            </div>
+        <% } %>
+        <% if (errorReserva) { %>
+            <div class="mb-8 bg-red-50 border border-red-200 rounded-xl p-4">
+                <p class="font-body text-sm text-red-700 font-semibold"><%= errorReserva %></p>
+            </div>
+        <% } %>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+            <!-- Resumen de perfil: usa el borde amarillo destacado (ver
+                 claseTarjetaDestacada) para que resalte sobre las demás. -->
+            <!-- "self-start" evita que esta tarjeta se estire para igualar la
+                 altura de "Próximas Reservas" cuando esa lista crece (el
+                 comportamiento por defecto de CSS Grid es estirar todas las
+                 columnas de una fila a la misma altura). Con esto, el perfil
+                 mantiene su tamaño natural sin importar cuántas reservas
+                 tenga el socio. -->
+            <div class="md:col-span-1 <%= claseTarjetaDestacada %> flex flex-col items-center text-center self-start">
+                <% if (usuario.fotoUrl) { %>
+                    <img src="<%= usuario.fotoUrl %>" alt="Foto de <%= usuario.nombre %>" class="w-36 h-36 rounded-full object-cover mb-4 border-4 border-secondary">
+                <% } else { %>
+                    <div class="w-36 h-36 rounded-full bg-primary text-white flex items-center justify-center text-5xl font-heading font-bold mb-4 border-4 border-secondary">
+                        <%= usuario.nombre.charAt(0).toUpperCase() %>
+                    </div>
+                <% } %>
+
+                <h2 class="font-heading text-xl font-bold text-primary mb-2"><%= usuario.nombre %></h2>
+
+                <span class="inline-block bg-secondary/25 text-primary text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
+                    <% if (usuario.juegaTenis && usuario.juegaPadel) { %>
+                        Jugador de Tenis y Pádel
+                    <% } else if (usuario.juegaTenis) { %>
+                        Jugador de Tenis
+                    <% } else if (usuario.juegaPadel) { %>
+                        Jugador de Pádel
+                    <% } else { %>
+                        Socio del club
+                    <% } %>
+                </span>
+
+                <div class="w-full text-left space-y-3 font-body text-sm border-t border-tertiary pt-4">
+                    <% if (usuario.marcaRaqueta) { %>
+                        <%
+                            // El ícono siempre se muestra (antes solo aparecía si
+                            // había posición en la escalerilla). Si el socio aún
+                            // no tiene posición asignada, se usa la posición 1
+                            // como valor por defecto, solo para elegir un color.
+                            const iconoPerfil = iconoRaqueta(posicionEscalerilla || 1);
+                        %>
+                        <div class="flex justify-between items-center">
+                            <span class="flex items-center gap-2 text-neutral/60">
+                                <svg class="w-5 h-5 flex-shrink-0" viewBox="<%= iconoPerfil.viewBox %>" aria-hidden="true">
+                                    <use href="#<%= iconoPerfil.id %>"></use>
+                                </svg>
+                                Raqueta
+                            </span>
+                            <span class="font-semibold text-neutral"><%= usuario.marcaRaqueta %></span>
+                        </div>
+                    <% } %>
+                    <div class="flex justify-between items-center">
+                        <span class="text-neutral/60">Posición en Escalerilla</span>
+                        <% if (posicionEscalerilla) { %>
+                            <span class="bg-secondary text-primary font-heading font-bold text-xs px-2.5 py-1 rounded-full">#<%= posicionEscalerilla %></span>
+                        <% } else { %>
+                            <span class="bg-neutral/10 text-neutral/50 font-semibold text-xs px-2.5 py-1 rounded-full">Sin asignar</span>
+                        <% } %>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-neutral/60">Socio desde</span>
+                        <span class="font-semibold text-neutral"><%= socioDesde %></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Próximas Reservas -->
+            <div class="md:col-span-2 <%= claseTarjeta %> flex flex-col">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-9 h-9 rounded-full bg-secondary/20 text-primary flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"></rect>
+                            <path d="M3 9H21M8 3V6M16 3V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                        </svg>
+                    </span>
+                    <h3 class="font-heading text-xl font-bold text-primary">Próximas Reservas</h3>
+                </div>
+                <% if (reservas.length === 0) { %>
+                    <p class="font-body text-sm text-neutral/60 flex-grow">
+                        Aún no tienes reservas. Cuando el módulo de reservas esté listo, podrás reservar una cancha y verla aparecer acá.
+                    </p>
+                <% } else { %>
+                    <ul class="space-y-3 flex-grow">
+                        <% reservas.forEach((reserva) => { %>
+                            <!-- Cada reserva es su propio bloque gris (no una fila
+                                 separada por una simple línea): se distingue mejor
+                                 del blanco de la tarjeta y de las demás reservas. -->
+                            <li class="flex items-center gap-4 bg-gray-50 rounded-lg p-4">
+                                <div class="bg-primary text-white p-2 rounded-lg text-center min-w-[60px]">
+                                    <span class="block font-body text-xs font-semibold"><%= reserva.mesCorto %></span>
+                                    <span class="block font-heading text-xl font-bold"><%= reserva.dia %></span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="font-body font-semibold text-neutral mb-1"><%= reserva.cancha %></h4>
+                                    <p class="font-body text-sm text-neutral/60"><%= reserva.horaInicio %> - <%= reserva.horaFin %> hrs</p>
+                                </div>
+                                <div class="flex flex-col items-end gap-1.5 flex-shrink-0">
+                                    <span class="bg-secondary/25 text-primary text-xs font-bold px-3 py-1 rounded-full">Confirmada</span>
+                                    <% if (reserva.puedeCancelar) { %>
+                                        <!-- El confirm() nativo del navegador evita cancelaciones
+                                             por un clic accidental — no hace falta nada más
+                                             sofisticado para esto. -->
+                                        <form
+                                                action="/panel-socio/reservas/<%= reserva.id %>/cancelar"
+                                                method="POST"
+                                                onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva?');"
+                                        >
+                                            <button type="submit" class="text-xs font-body text-red-600 hover:text-red-700 hover:underline">
+                                                Cancelar
+                                            </button>
+                                        </form>
+                                    <% } else { %>
+                                        <span class="text-[11px] font-body text-neutral/40">No cancelable (menos de 24h)</span>
+                                    <% } %>
+                                </div>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+            </div>
+
+            <!-- Estado del Club: tarjeta puramente de clima (Javiera pidió sacar
+                 "Canchas Disponibles" y cualquier otro dato que no fuera clima).
+                 Usa una foto de fondo con degradado oscuro encima, para que el
+                 texto blanco siga siendo legible sobre cualquier imagen. -->
+            <div class="md:col-span-1 bg-white rounded-xl coastal-shadow border border-tertiary overflow-hidden relative transition-all duration-300 hover:shadow-xl hover:-translate-y-1 min-h-[220px]">
+                <div class="absolute inset-0">
+                    <!-- Ruta de imagen pendiente, igual que hero.jpg y las demás
+                         fotos del sitio: por ahora se ve rota hasta que subas una
+                         foto real del club/playa a public/images/. -->
+                    <img src="/images/estado-club-bg.jpg" alt="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/60 to-primary/20"></div>
+                </div>
+
+                <div class="relative z-10 p-6 h-full flex flex-col justify-between text-white">
+                    <h3 class="font-heading text-xl font-bold">Estado del Club</h3>
+
+                    <% if (clima) { %>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <% if (clima.categoria === 'sol') { %>
+                                    <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"></circle>
+                                        <path d="M12 2V4M12 20V22M4 12H2M22 12H20M5 5L6.5 6.5M19 19L17.5 17.5M5 19L6.5 17.5M19 5L17.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    </svg>
+                                <% } else if (clima.categoria === 'lluvia') { %>
+                                    <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M7 16.5A4.5 4.5 0 0 1 7.5 7.6 6 6 0 0 1 18.9 9 4 4 0 0 1 18 16.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                        <path d="M9 19L8 21M13 19L12 21M17 19L16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    </svg>
+                                <% } else if (clima.categoria === 'tormenta') { %>
+                                    <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M7 15.5A4.5 4.5 0 0 1 7.5 6.6 6 6 0 0 1 18.9 8 4 4 0 0 1 18 15.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                        <path d="M13 15L10.5 19H13L11 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                <% } else if (clima.categoria === 'nieve') { %>
+                                    <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M7 15.5A4.5 4.5 0 0 1 7.5 6.6 6 6 0 0 1 18.9 8 4 4 0 0 1 18 15.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                        <path d="M12 15V22M9 17.5L15 19.5M15 17.5L9 19.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    </svg>
+                                <% } else { %>
+                                    <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M7 16.5A4.5 4.5 0 0 1 7.5 7.6 6 6 0 0 1 18.9 9 4 4 0 0 1 18 16.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    </svg>
+                                <% } %>
+                                <span class="font-heading text-4xl font-bold"><%= clima.temperatura %>°C</span>
+                            </div>
+                            <p class="font-body text-sm text-white/80 mb-3">Pichilemu, <%= clima.descripcion %></p>
+                            <div class="flex items-center gap-2 text-sm text-white/90">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M3 8H14.5C16.433 8 18 6.433 18 4.5V4.5C18 2.567 16.433 1 14.5 1V1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M3 13H17.5C19.433 13 21 14.567 21 16.5V16.5C21 18.433 19.433 20 17.5 20V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M3 17.5H10.5C11.8807 17.5 13 18.6193 13 20V20C13 21.1046 12.1046 22 11 22V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                                Viento <%= clima.viento %> km/h
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <p class="font-body text-sm text-white/70">Clima no disponible por el momento.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Torneos & Eventos -->
+            <div class="md:col-span-2 <%= claseTarjeta %> flex flex-col">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-9 h-9 rounded-full bg-secondary/20 text-primary flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M7 4H17V9C17 11.7614 14.7614 14 12 14C9.23858 14 7 11.7614 7 9V4Z" stroke="currentColor" stroke-width="1.5"></path>
+                            <path d="M7 5H4V6C4 8 5.5 9.5 7 9.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M17 5H20V6C20 8 18.5 9.5 17 9.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M12 14V18M9 21H15M9 21C9 19.5 10 18.5 12 18.5C14 18.5 15 19.5 15 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                        </svg>
+                    </span>
+                    <h3 class="font-heading text-xl font-bold text-primary">Torneos & Eventos</h3>
+                </div>
+                <% if (proximosTorneos.length === 0) { %>
+                    <p class="font-body text-sm text-neutral/60 flex-grow">No hay torneos programados por el momento.</p>
+                <% } else { %>
+                    <ul class="space-y-4 flex-grow">
+                        <% proximosTorneos.forEach((torneo, i) => { %>
+                            <li class="flex items-start gap-4 <%= i < proximosTorneos.length - 1 ? 'pb-4 border-b border-tertiary' : '' %>">
+                                <div class="bg-primary text-white p-2 rounded-lg text-center min-w-[60px] border-t-2 border-secondary">
+                                    <span class="block font-body text-xs font-semibold"><%= torneo.mesCorto %></span>
+                                    <span class="block font-heading text-xl font-bold"><%= torneo.dia %></span>
+                                </div>
+                                <div>
+                                    <h4 class="font-body font-semibold text-neutral mb-1"><%= torneo.nombre %></h4>
+                                    <% if (torneo.detalle) { %>
+                                        <p class="font-body text-sm text-neutral/60"><%= torneo.detalle %></p>
+                                    <% } %>
+                                </div>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

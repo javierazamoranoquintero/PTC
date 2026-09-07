@@ -1,0 +1,78 @@
+<%
+// "paginaActual" nos dice en qué sección del panel admin estamos, para
+// resaltar el link correspondiente en el menú (mismo patrón que ya usa
+// partials/navbar.ejs con las páginas públicas). Si una vista todavía no
+// manda este dato, no se resalta ninguno, pero el sidebar igual se ve bien.
+const seccionActiva = typeof paginaActual !== 'undefined' ? paginaActual : '';
+const claseLinkActivo = 'flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white font-bold transition-all';
+const claseLinkInactivo = 'flex items-center gap-3 px-4 py-3 rounded-lg text-neutral/70 hover:bg-tertiary transition-all';
+%>
+<!-- Sidebar del panel de administración. Solo se muestra desde tablet para
+     arriba (hidden md:flex): en el celular, por ahora, el admin sigue
+     navegando con el menú normal de arriba. Una versión para mobile puede
+     ser un paso aparte más adelante si hace falta.
+
+     "sticky" en vez de "fixed": con "fixed" el sidebar medía SIEMPRE el
+     alto de la pantalla completa, sin importar cuánto contenido hubiera
+     debajo — por eso en páginas cortas terminaba tapando el footer (el
+     rectángulo blanco del sidebar quedaba flotando encima). Con "sticky",
+     el sidebar se queda pegado mientras haces scroll, pero respeta el
+     tamaño del contenedor donde vive (el <div class="flex ..."> que lo
+     envuelve junto al <main>): cuando ese contenedor se termina (justo
+     antes del footer, que está AFUERA de él), el sidebar termina con él
+     en vez de seguir flotando encima. -->
+<aside class="hidden md:flex flex-col sticky top-20 h-[calc(100vh-5rem)] w-60 shrink-0 bg-white border-r border-tertiary pt-6 pb-6 px-4 overflow-y-auto">
+    <nav class="flex flex-col gap-1 flex-1">
+        <a href="/admin" class="<%= seccionActiva === 'general' ? claseLinkActivo : claseLinkInactivo %>">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"></rect>
+                <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"></rect>
+            </svg>
+            <span class="font-body text-sm">Panel General</span>
+        </a>
+        <a href="/admin/reservas" class="<%= seccionActiva === 'reservas' ? claseLinkActivo : claseLinkInactivo %>">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="2"></rect>
+                <path d="M3 9H21M8 3V6M16 3V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <span class="font-body text-sm">Gestión de Canchas</span>
+        </a>
+        <a href="/admin/cierres/nuevo" class="<%= seccionActiva === 'cierres' ? claseLinkActivo : claseLinkInactivo %>">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M20 16.58A5 5 0 0018 7h-1.26A8 8 0 104 15.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <line x1="16" y1="13" x2="16" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+                <line x1="8" y1="13" x2="8" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+                <line x1="12" y1="15" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+            </svg>
+            <span class="font-body text-sm">Cerrar Cancha</span>
+        </a>
+        <a href="/admin/escalerilla" class="<%= seccionActiva === 'escalerilla' ? claseLinkActivo : claseLinkInactivo %>">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M4 21V13M12 21V7M20 21V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <span class="font-body text-sm">Escalerilla</span>
+        </a>
+        <a href="/admin/noticias" class="<%= seccionActiva === 'noticias' ? claseLinkActivo : claseLinkInactivo %>">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"></rect>
+                <path d="M7 9H17M7 13H17M7 17H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <span class="font-body text-sm">Noticias</span>
+        </a>
+        <a href="/admin/torneos/nuevo" class="<%= seccionActiva === 'torneos' ? claseLinkActivo : claseLinkInactivo %>">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M8 21H16M12 17V21M6 4H18V8C18 11.3137 15.3137 14 12 14C8.68629 14 6 11.3137 6 8V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+                <path d="M6 5H3V7C3 8.65685 4.34315 10 6 10M18 5H21V7C21 8.65685 19.6569 10 18 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <span class="font-body text-sm">Torneos</span>
+        </a>
+    </nav>
+    <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-lg text-neutral/50 hover:bg-tertiary transition-all mt-4 border-t border-tertiary pt-5">
+        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M19 12H5M5 12L11 18M5 12L11 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="font-body text-sm">Volver al Sitio</span>
+    </a>
+</aside>

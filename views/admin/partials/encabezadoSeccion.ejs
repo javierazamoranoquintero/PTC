@@ -1,0 +1,44 @@
+<%
+// Encabezado reutilizable para cada sección del panel admin (Reservas,
+// Escalerilla, Noticias, Torneos). Centraliza acá el ÍCONO de cada sección
+// (el mismo dibujo que ya usa el sidebar y las tarjetas del Panel General)
+// y le suma un color propio, tenue, para darle identidad visual a cada
+// área sin salirse de la paleta del sitio. Recibe:
+//   - seccion: 'reservas' | 'cierres' | 'escalerilla' | 'noticias' | 'torneos'
+//   - titulo: texto del <h1>
+//   - subtitulo (opcional): texto chico debajo del título
+const ICONOS_SECCION = {
+    reservas: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="2"></rect><path d="M3 9H21M8 3V6M16 3V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>',
+    cierres: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 16.58A5 5 0 0018 7h-1.26A8 8 0 104 15.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><line x1="16" y1="13" x2="16" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="8" y1="13" x2="8" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="12" y1="15" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg>',
+    escalerilla: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 21V13M12 21V7M20 21V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>',
+    noticias: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"></rect><path d="M7 9H17M7 13H17M7 17H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>',
+    torneos: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 21H16M12 17V21M6 4H18V8C18 11.3137 15.3137 14 12 14C8.68629 14 6 11.3137 6 8V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M6 5H3V7C3 8.65685 4.34315 10 6 10M18 5H21V7C21 8.65685 19.6569 10 18 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>',
+};
+
+const COLORES_SECCION = {
+    reservas: { fondo: 'bg-blue-50', icono: 'text-blue-600', borde: 'border-blue-100' },
+    cierres: { fondo: 'bg-sky-50', icono: 'text-sky-600', borde: 'border-sky-100' },
+    escalerilla: { fondo: 'bg-emerald-50', icono: 'text-emerald-600', borde: 'border-emerald-100' },
+    noticias: { fondo: 'bg-amber-50', icono: 'text-amber-600', borde: 'border-amber-100' },
+    torneos: { fondo: 'bg-violet-50', icono: 'text-violet-600', borde: 'border-violet-100' },
+};
+
+const colores = COLORES_SECCION[seccion] || { fondo: 'bg-tertiary', icono: 'text-primary', borde: 'border-tertiary' };
+%>
+<div class="flex items-center gap-4 mb-8 pb-6 border-b-2 <%= colores.borde %>">
+    <div class="w-12 h-12 rounded-xl <%= colores.fondo %> flex items-center justify-center <%= colores.icono %> flex-shrink-0">
+        <%- ICONOS_SECCION[seccion] %>
+    </div>
+    <div>
+        <h1 class="font-heading text-2xl md:text-3xl font-bold text-primary"><%= titulo %></h1>
+        <% if (typeof subtitulo !== 'undefined' && subtitulo) { %>
+            <!-- Sin "capitalize" acá a propósito: esta clase de Tailwind pone
+                 en mayúscula la PRIMERA LETRA DE CADA PALABRA, lo cual se ve
+                 bien para una fecha corta ("Lunes 7 de Septiembre") pero
+                 rarísimo en una oración larga como la de Escalerilla. Si una
+                 vista necesita el subtítulo con mayúscula inicial, que la
+                 arme así desde el controlador (ver adminReservaController.js). -->
+            <p class="font-body text-neutral/60 mt-1"><%= subtitulo %></p>
+        <% } %>
+    </div>
+</div>

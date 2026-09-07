@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: 'Editar perfil' }) %>
+</head>
+<body class="flex flex-col min-h-screen bg-tertiary">
+
+<%- include('../partials/navbar', { nombreClub: nombreClub, paginaActual: 'panel-socio' }) %>
+
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-32">
+    <div class="w-full max-w-md bg-white rounded-xl coastal-shadow p-8 md:p-10">
+
+        <h1 class="font-heading text-2xl font-bold text-primary mb-2">Editar perfil</h1>
+        <p class="font-body text-sm text-neutral/70 mb-6">Actualiza tus datos personales.</p>
+
+        <% if (error) { %>
+            <div class="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+                <p class="font-body text-sm text-red-700"><%= error %></p>
+            </div>
+        <% } %>
+
+        <!-- enctype="multipart/form-data" es obligatorio para poder subir una
+             foto nueva junto con el resto de los campos. -->
+        <form action="/panel-socio/editar-perfil" method="POST" enctype="multipart/form-data" class="space-y-5">
+
+            <div class="flex flex-col items-center gap-3">
+                <% if (fotoActual) { %>
+                    <img src="<%= fotoActual %>" alt="Tu foto de perfil" class="w-32 h-32 rounded-full object-cover border-4 border-secondary">
+                <% } else { %>
+                    <div class="w-32 h-32 rounded-full bg-primary text-white flex items-center justify-center text-4xl font-heading font-bold border-4 border-secondary">
+                        <%= (valores.nombre || '?').charAt(0).toUpperCase() %>
+                    </div>
+                <% } %>
+                <label for="foto" class="block font-body text-sm font-medium text-neutral">Cambiar foto de perfil</label>
+                <input
+                        type="file"
+                        id="foto"
+                        name="foto"
+                        accept="image/jpeg,image/png,image/webp"
+                        class="w-full rounded-lg border border-neutral/20 font-body text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-white file:font-semibold file:cursor-pointer hover:file:bg-primary/90"
+                >
+                <p class="font-body text-xs text-neutral/50">Déjalo vacío si quieres mantener tu foto actual. Formatos JPG, PNG o WEBP, máximo 2MB.</p>
+            </div>
+
+            <div>
+                <label for="nombre" class="block font-body text-sm font-medium text-neutral mb-1">Nombre completo</label>
+                <input
+                        type="text"
+                        id="nombre"
+                        name="nombre"
+                        value="<%= valores.nombre %>"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <div>
+                <label for="edad" class="block font-body text-sm font-medium text-neutral mb-1">Edad</label>
+                <input
+                        type="number"
+                        id="edad"
+                        name="edad"
+                        value="<%= valores.edad %>"
+                        min="3"
+                        max="100"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <div>
+                <span class="block font-body text-sm font-medium text-neutral mb-1">Sexo</span>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="radio" name="sexo" value="femenino" required <%= valores.sexo === 'femenino' ? 'checked' : '' %> class="text-primary focus:ring-primary">
+                        Femenino
+                    </label>
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="radio" name="sexo" value="masculino" required <%= valores.sexo === 'masculino' ? 'checked' : '' %> class="text-primary focus:ring-primary">
+                        Masculino
+                    </label>
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="radio" name="sexo" value="prefiero_no_decir" required <%= valores.sexo === 'prefiero_no_decir' ? 'checked' : '' %> class="text-primary focus:ring-primary">
+                        Prefiero no decir
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <span class="block font-body text-sm font-medium text-neutral mb-1">¿Qué juegas en el club?</span>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="checkbox" name="juegaTenis" value="on" <%= valores.juegaTenis ? 'checked' : '' %> class="rounded text-primary focus:ring-primary">
+                        Tenis
+                    </label>
+                    <label class="flex items-center gap-2 font-body text-sm text-neutral">
+                        <input type="checkbox" name="juegaPadel" value="on" <%= valores.juegaPadel ? 'checked' : '' %> class="rounded text-primary focus:ring-primary">
+                        Pádel
+                    </label>
+                </div>
+                <p class="font-body text-xs text-neutral/50 mt-1">Marca al menos una opción (puedes marcar las dos).</p>
+            </div>
+
+            <div>
+                <label for="marcaRaqueta" class="block font-body text-sm font-medium text-neutral mb-1">Marca de tu raqueta</label>
+                <input
+                        type="text"
+                        id="marcaRaqueta"
+                        name="marcaRaqueta"
+                        value="<%= valores.marcaRaqueta %>"
+                        required
+                        class="w-full rounded-lg border border-neutral/20 px-4 py-2 font-body focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+            </div>
+
+            <button
+                    type="submit"
+                    class="w-full bg-primary text-white font-heading font-bold py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-95"
+            >
+                Guardar cambios
+            </button>
+        </form>
+
+        <p class="font-body text-sm text-neutral/70 mt-6 text-center">
+            <a href="/panel-socio" class="text-primary font-semibold hover:underline">Volver al Panel del Socio</a>
+        </p>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>
